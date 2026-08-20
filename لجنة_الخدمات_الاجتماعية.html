@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#1e3a5f"/>
+<title>لجنة الخدمات الاجتماعية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Cairo',sans-serif;background:#f1f5f9;direction:rtl;min-height:100vh}
+#app{max-width:480px;margin:0 auto;min-height:100vh;background:#f1f5f9}
+.screen{display:none}.screen.active{display:block}
+.header{background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:18px 16px;color:#fff}
+.header h1{font-size:17px;font-weight:900}
+.header p{font-size:11px;opacity:.75;margin-top:3px}
+.hrow{display:flex;justify-content:space-between;align-items:center}
+.hbtn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:10px;padding:7px 12px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;position:relative}
+.nb{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.pad{padding:14px}
+.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:12px}
+.welcome{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe}
+.section-title{font-size:14px;font-weight:800;color:#1e293b;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);cursor:pointer;border:1.5px solid #f1f5f9;-webkit-user-select:none;user-select:none}
+.svc:active{transform:scale(.97)}
+label{display:block;font-size:13px;font-weight:700;color:#475569;margin-bottom:5px}
+input,select,textarea{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid #e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;background:#f8fafc;color:#1e293b;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:#2563eb;background:#fff}
+.err{border-color:#dc2626!important}
+.errtxt{color:#dc2626;font-size:11px;margin-top:3px;display:none}
+.fw{margin-bottom:12px}
+.btnp{width:100%;padding:14px;border-radius:12px;border:none;font-family:'Cairo',sans-serif;font-weight:800;font-size:15px;cursor:pointer;color:#fff;margin-bottom:12px;-webkit-appearance:none}
+.btns{width:100%;padding:11px;border-radius:12px;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;background:#f1f5f9;color:#475569;margin-bottom:8px}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;margin-bottom:10px;display:inline-block}
+.sbadge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.arow{display:flex;gap:6px;margin-top:10px}
+.abtn{flex:1;padding:7px;border-radius:8px;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:12px;cursor:pointer}
+
+/* Upload */
+.upload-section{background:#f8fafc;border-radius:12px;padding:14px;margin-bottom:12px}
+.upload-title{font-size:13px;font-weight:800;color:#1e293b;margin-bottom:10px}
+.req-docs{background:#fefce8;border:1px solid #fde047;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.req-docs-title{font-size:12px;font-weight:800;color:#854d0e;margin-bottom:4px}
+.req-docs-list{font-size:11px;color:#92400e;line-height:1.8}
+.upload-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.upload-btn{padding:12px 8px;border-radius:12px;border:2px dashed #cbd5e1;background:#fff;cursor:pointer;text-align:center;font-family:'Cairo',sans-serif;transition:all .2s;position:relative;overflow:hidden}
+.upload-btn:active{background:#eff6ff;border-color:#2563eb}
+.upload-btn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.upload-btn-icon{font-size:24px;margin-bottom:4px}
+.upload-btn-text{font-size:12px;font-weight:700;color:#475569}
+.upload-btn-hint{font-size:10px;color:#94a3b8;margin-top:2px}
+.files-list{display:flex;flex-direction:column;gap:8px}
+.file-item{display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:8px 10px}
+.file-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid #e2e8f0;cursor:pointer;flex-shrink:0}
+.file-pdf{width:44px;height:44px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:12px;font-weight:700;color:#166534;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-size{font-size:10px;color:#4ade80;margin-top:1px}
+.file-del{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0}
+
+/* Viewer */
+.viewer{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:2000;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px}
+.viewer.open{display:flex}
+.viewer img{max-width:100%;max-height:80vh;border-radius:10px}
+.viewer-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.viewer-name{color:#fff;font-size:12px;margin-top:10px;opacity:.7}
+
+/* Notif */
+.notif-panel{position:fixed;top:62px;left:10px;right:10px;max-width:460px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.15);z-index:999;max-height:300px;overflow-y:auto;display:none}
+.notif-hdr{padding:12px 16px;border-bottom:1px solid #f1f5f9;font-weight:800;font-size:14px;display:flex;justify-content:space-between}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:18px;padding:26px;width:100%;max-width:340px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.stat{background:#fff;border-radius:12px;padding:10px 6px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+
+/* Toast */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:12px;font-weight:700;z-index:9999;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.2);white-space:nowrap;display:none;max-width:90vw;text-align:center}
+
+.filter-row{display:flex;gap:8px;margin-top:8px}
+.filter-row select{flex:1;font-size:12px;padding:9px 10px}
+.dbox{background:#f8fafc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:12px;color:#475569;line-height:1.8}
+.dc{display:inline-flex;align-items:center;gap:4px;background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.req-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:10px}
+.success-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center}
+.ref-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px;margin-bottom:14px}
+@media(min-width:768px){body{background:#e2e8f0}#app{box-shadow:0 0 40px rgba(0,0,0,.15)}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME -->
+<div id="s-home" class="screen active">
+  <div class="header">
+    <div class="hrow">
+      <div><h1>🏛️ لجنة الخدمات الاجتماعية</h1><p>مركز التكوين المهني — فضيلة سعدان — بسكرة</p></div>
+      <div style="display:flex;gap:8px">
+        <button class="hbtn" onclick="toggleNotif()">🔔<span class="nb" id="nb" style="display:none">0</span></button>
+        <button class="hbtn" onclick="openAdmin()">⚙️</button>
+      </div>
+    </div>
+  </div>
+  <div class="pad">
+    <div class="card welcome"><div style="font-size:14px;font-weight:800;color:#1e40af">مرحباً بك 👋</div><div style="font-size:12px;color:#3b82f6;margin-top:3px">اختر الخدمة وارفق الوثائق المطلوبة</div></div>
+    <div class="section-title">الخدمات المتاحة</div>
+    <div class="grid" id="svc-grid"></div>
+    <div id="my-reqs-sec" style="margin-top:14px;display:none">
+      <div class="section-title">آخر طلباتي</div>
+      <div id="my-reqs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div id="s-form" class="screen">
+  <div class="header" id="form-hdr">
+    <button class="back-btn" onclick="goHome()">← رجوع</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="svc-icon" style="font-size:32px"></span>
+      <div><div id="svc-title" style="font-size:16px;font-weight:900"></div><div id="svc-desc" style="font-size:11px;opacity:.8"></div></div>
+    </div>
+  </div>
+  <div class="pad">
+    <div class="card">
+      <div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">👤 بيانات الموظف</div>
+      <div class="fw"><label>الاسم واللقب *</label><input id="f-name" type="text" placeholder="أدخل اسمك الكامل" autocomplete="name"/><div class="errtxt" id="e-name">هذا الحقل مطلوب</div></div>
+      <div class="fw"><label>رقم الشارة / التأجير *</label><input id="f-badge" type="text" placeholder="رقم التعريف الوظيفي"/><div class="errtxt" id="e-badge">هذا الحقل مطلوب</div></div>
+      <div class="fw"><label>رقم الهاتف</label><input id="f-phone" type="tel" placeholder="06XXXXXXXX" autocomplete="tel"/></div>
+      <div class="fw"><label>الصفة *</label>
+        <select id="f-cat"><option value="">-- اختر صفتك --</option><option>عامل مهني</option><option>أستاذ</option><option>إداري</option><option>متقاعد</option></select>
+        <div class="errtxt" id="e-cat">هذا الحقل مطلوب</div>
+      </div>
+    </div>
+    <div class="card" id="svc-fields" style="display:none"></div>
+
+    <!-- UPLOAD SECTION -->
+    <div class="card">
+      <div class="upload-title">📎 رفع الوثائق</div>
+      <div id="req-docs-box" class="req-docs"></div>
+      <div class="upload-btns">
+        <!-- Camera capture -->
+        <label class="upload-btn">
+          <input type="file" accept="image/*" capture="environment" onchange="handleFiles(this.files)" id="cam-input"/>
+          <div class="upload-btn-icon">📷</div>
+          <div class="upload-btn-text">التقاط صورة</div>
+          <div class="upload-btn-hint">من الكاميرا</div>
+        </label>
+        <!-- Gallery/files -->
+        <label class="upload-btn">
+          <input type="file" accept="image/*,application/pdf" multiple onchange="handleFiles(this.files)" id="gal-input"/>
+          <div class="upload-btn-icon">🖼️</div>
+          <div class="upload-btn-text">من المعرض</div>
+          <div class="upload-btn-hint">صور أو PDF</div>
+        </label>
+      </div>
+      <div class="files-list" id="files-list"></div>
+      <div class="errtxt" id="e-docs">يجب رفع الوثائق المطلوبة</div>
+    </div>
+
+    <button class="btnp" id="submit-btn" onclick="submitReq()">✅ إرسال الطلب</button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="s-success" class="screen">
+  <div class="success-wrap">
+    <div style="width:100%;max-width:340px">
+      <div style="font-size:72px;margin-bottom:14px">✅</div>
+      <div style="font-size:21px;font-weight:900;color:#1e293b;margin-bottom:8px">تم إرسال طلبك!</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:12px">طلب <strong id="succ-svc"></strong></div>
+      <div class="ref-box"><div style="font-size:16px;color:#166534;font-weight:800" id="succ-ref"></div><div style="font-size:11px;color:#4ade80;margin-top:2px">رقم طلبك للمتابعة</div></div>
+      <div id="succ-docs" style="margin-bottom:14px"></div>
+      <div style="font-size:12px;color:#94a3b8;margin-bottom:20px;line-height:1.6">سيتم مراجعة طلبك من قِبل اللجنة والرد عليك في أقرب وقت.</div>
+      <button class="btnp" style="background:linear-gradient(135deg,#1e3a5f,#2563eb)" onclick="printLast()">🖨️ طباعة الطلب</button>
+      <button class="btns" onclick="goHome()">العودة للرئيسية</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="s-admin" class="screen">
+  <div class="header">
+    <div class="hrow">
+      <div><h1>⚙️ لوحة الإدارة</h1><p>إدارة الطلبات والوثائق</p></div>
+      <div style="display:flex;gap:8px">
+        <button class="hbtn" onclick="exportCSV()">📊</button>
+        <button class="hbtn" onclick="goHome()">خروج</button>
+      </div>
+    </div>
+  </div>
+  <div class="pad">
+    <div class="stats" id="stats"></div>
+    <div class="card">
+      <input type="text" id="srch" placeholder="🔍 بحث بالاسم أو رقم الطلب..." oninput="renderAdmin()"/>
+      <div class="filter-row">
+        <select id="fst" onchange="renderAdmin()"><option>الكل</option><option>قيد الدراسة</option><option>مقبول</option><option>مرفوض</option></select>
+        <select id="fsv" onchange="renderAdmin()"><option value="الكل">كل الخدمات</option></select>
+      </div>
+      <div id="finfo" style="font-size:12px;color:#2563eb;margin-top:8px;font-weight:600"></div>
+    </div>
+    <div id="admin-list"></div>
+  </div>
+</div>
+
+<!-- Notif Panel -->
+<div id="notif-panel" class="notif-panel">
+  <div class="notif-hdr">🔔 الإشعارات<button onclick="clearNotifs()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:12px;font-family:'Cairo',sans-serif">مسح</button></div>
+  <div id="notif-list"><div style="padding:20px;text-align:center;color:#94a3b8;font-size:13px">لا توجد إشعارات</div></div>
+</div>
+
+<!-- Admin Modal -->
+<div id="admin-modal" class="overlay">
+  <div class="modal">
+    <div style="font-weight:900;font-size:17px;margin-bottom:18px">🔐 دخول الإدارة</div>
+    <div class="fw"><input type="password" id="apass" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')adminLogin()"/></div>
+    <div style="display:flex;gap:8px">
+      <button class="btnp" style="background:#2563eb;margin:0;flex:1;padding:10px;font-size:14px" onclick="adminLogin()">دخول</button>
+      <button class="btns" style="margin:0;flex:1;padding:10px" onclick="closeAdmin()">إلغاء</button>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:10px;text-align:center">كلمة المرور: admin123</div>
+  </div>
+</div>
+
+<!-- Doc Viewer -->
+<div id="viewer" class="viewer">
+  <button class="viewer-close" onclick="closeViewer()">✕</button>
+  <div id="viewer-content"></div>
+  <div class="viewer-name" id="viewer-name"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ===============================================
+// ⚠️ خطوة 1: الصق هنا بيانات مشروعك من Firebase Console
+// (Project settings ⚙️ → Your apps → إعدادات التطبيق)
+// ===============================================
+const firebaseConfig = {
+  apiKey: "ضع_apiKey_هنا",
+  authDomain: "ضع_authDomain_هنا",
+  projectId: "ضع_projectId_هنا",
+  storageBucket: "ضع_storageBucket_هنا",
+  messagingSenderId: "ضع_messagingSenderId_هنا",
+  appId: "ضع_appId_هنا"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
+// ===============================================
+
+const SVCS=[
+  {id:"salfa",icon:"💰",title:"سلفة مسترجعة",color:"#2563eb",desc:"طلب سلفة مالية تُسترجع على أقساط"},
+  {id:"ashia",icon:"🏥",title:"تعويض الأشعة",color:"#16a34a",desc:"تعويض مصاريف الأشعة الطبية"},
+  {id:"eid_amal",icon:"🎉",title:"عيد العمال",color:"#d97706",desc:"منحة عيد العمال الأول من ماي"},
+  {id:"eid_mara",icon:"🌸",title:"عيد المرأة",color:"#db2777",desc:"منحة عيد المرأة الثامن مارس"},
+  {id:"dokhoul",icon:"📚",title:"منحة الدخول المدرسي",color:"#7c3aed",desc:"منحة بداية الموسم الدراسي"},
+  {id:"tamadrros",icon:"🎓",title:"منحة التمدرس",color:"#0891b2",desc:"منحة للموظفين ذوي الأولاد"},
+  {id:"omra",icon:"🕌",title:"قرعة العمرة",color:"#059669",desc:"الاشتراك في قرعة العمرة"},
+];
+const FLDS={
+  salfa:[{key:"amount",label:"المبلغ المطلوب (دج)",type:"combo",opts:["20000","25000","30000"],req:true},{key:"reason",label:"سبب طلب السلفة",type:"textarea",req:true},{key:"months",label:"عدد أشهر الاسترجاع",type:"select",opts:["3","6","9","12"],req:true}],
+  ashia:[{key:"type",label:"نوع الأشعة",type:"select",opts:["أشعة عادية","أشعة مقطعية (Scanner)","رنين مغناطيسي (IRM)","إيكوغرافيا","نوع آخر"],req:true},{key:"amount",label:"المبلغ المصروف (دج)",type:"combo",opts:["5000","10000","15000","20000","25000"],req:true},{key:"date",label:"تاريخ الأشعة",type:"date",req:true},{key:"hospital",label:"اسم المستشفى أو العيادة",type:"text",req:false}],
+  eid_amal:[{key:"note",label:"ملاحظات",type:"textarea",req:false}],
+  eid_mara:[{key:"note",label:"ملاحظات",type:"textarea",req:false}],
+  dokhoul:[{key:"children_count",label:"عدد الأولاد في الدراسة",type:"number",req:true},{key:"levels",label:"مستويات الدراسة",type:"text",req:true,ph:"ابتدائي، متوسط، ثانوي"}],
+  tamadrros:[{key:"child_name",label:"اسم الولد",type:"text",req:true},{key:"level",label:"مستوى الدراسة",type:"select",opts:["ابتدائي","متوسط","ثانوي","جامعي","تكوين مهني"],req:true},{key:"school",label:"اسم المؤسسة",type:"text",req:true},{key:"year",label:"السنة الدراسية",type:"text",req:true,ph:"2025/2026"}],
+  omra:[{key:"passport",label:"رقم جواز السفر",type:"text",req:true},{key:"passport_exp",label:"تاريخ انتهاء جواز السفر",type:"date",req:true},{key:"prev_omra",label:"هل سبق لك أداء العمرة؟",type:"select",opts:["لا","نعم"],req:true}],
+};
+const RDOCS={
+  salfa:["بطاقة التعريف الوطنية","آخر قسيمة راتب","طلب خطي موقع"],
+  ashia:["وصفة الطبيب","فاتورة الأشعة","بطاقة التعريف الوطنية"],
+  eid_amal:["بطاقة التعريف الوطنية"],
+  eid_mara:["بطاقة التعريف الوطنية"],
+  dokhoul:["شهادات التمدرس للأولاد","بطاقة التعريف الوطنية"],
+  tamadrros:["شهادة التمدرس","بطاقة التعريف الوطنية"],
+  omra:["صورة جواز السفر","بطاقة التعريف الوطنية","صورة شخصية"],
+};
+
+let reqs=[],notifs=[],curSvc=null,files=[],notifOpen=false;
+let myLocalIds=JSON.parse(localStorage.getItem('myReqIds')||'[]'); // لتتبّع طلبات هذا الجهاز فقط
+
+db.collection('requests').orderBy('createdAt','desc').onSnapshot(snap=>{
+  reqs=snap.docs.map(d=>({id:d.id,...d.data()}));
+  if(document.getElementById('s-home').classList.contains('active')) renderMyReqs();
+  if(document.getElementById('s-admin').classList.contains('active')) renderAdminScreen();
+},err=>{
+  toast('⚠️ تعذّر الاتصال بقاعدة البيانات — تأكد من إعداد Firebase','error');
+  console.error(err);
+});
+
+const sc=s=>s==="مقبول"?"#16a34a":s==="مرفوض"?"#dc2626":"#d97706";
+const sb=s=>s==="مقبول"?"#dcfce7":s==="مرفوض"?"#fee2e2":"#fef9c3";
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('s-'+id).classList.add('active');window.scrollTo(0,0);}
+function goHome(){show('home');renderMyReqs();notifOpen=false;document.getElementById('notif-panel').style.display='none';}
+
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=type==='success'?'#16a34a':'#dc2626';
+  t.style.display='block';setTimeout(()=>t.style.display='none',3000);
+}
+
+function addNotif(msg,type='info'){
+  notifs.unshift({id:Date.now(),msg,type,time:new Date().toLocaleTimeString('ar-DZ')});
+  const c=notifs.length;
+  const nb=document.getElementById('nb');nb.textContent=c;nb.style.display='flex';
+  renderNotifs();
+}
+function toggleNotif(){
+  notifOpen=!notifOpen;
+  document.getElementById('notif-panel').style.display=notifOpen?'block':'none';
+}
+function clearNotifs(){notifs=[];renderNotifs();document.getElementById('nb').style.display='none';}
+function renderNotifs(){
+  const el=document.getElementById('notif-list');
+  if(!notifs.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#94a3b8;font-size:13px">لا توجد إشعارات</div>';return;}
+  el.innerHTML=notifs.map(n=>`<div class="notif-item" style="padding:10px 16px;border-bottom:1px solid #f8fafc;display:flex;gap:10px"><span style="font-size:16px">${n.type==='success'?'✅':n.type==='error'?'❌':'ℹ️'}</span><div><div style="font-size:12px;color:#1e293b;line-height:1.4">${n.msg}</div><div style="font-size:10px;color:#94a3b8;margin-top:2px">${n.time}</div></div></div>`).join('');
+}
+
+// ===== FILE UPLOAD =====
+function handleFiles(fileList){
+  Array.from(fileList).forEach(file=>{
+    if(file.size>5*1024*1024){toast(`الملف أكبر من 5MB`,'error');return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      files.push({id:Date.now()+Math.random(),name:file.name,size:file.size,type:file.type,data:e.target.result});
+      renderFiles();
+      document.getElementById('e-docs').style.display='none';
+    };
+    reader.onerror=()=>toast('حدث خطأ في قراءة الملف','error');
+    reader.readAsDataURL(file);
+  });
+  // Reset inputs so same file can be selected again
+  document.getElementById('cam-input').value='';
+  document.getElementById('gal-input').value='';
+}
+
+function fmtSize(b){if(b<1024)return b+'B';if(b<1048576)return (b/1024).toFixed(1)+'KB';return (b/1048576).toFixed(1)+'MB';}
+
+function delFile(id){files=files.filter(f=>f.id!==id);renderFiles();}
+
+function renderFiles(){
+  const el=document.getElementById('files-list');
+  if(!files.length){el.innerHTML='';return;}
+  el.innerHTML=files.map(f=>{
+    const img=f.type.startsWith('image/');
+    const thumb=img?`<img src="${f.data}" class="file-thumb" onclick="viewFile(${f.id})" loading="lazy"/>`:`<div class="file-pdf">📄</div>`;
+    return `<div class="file-item">${thumb}<div class="file-info"><div class="file-name">${f.name}</div><div class="file-size">✅ ${fmtSize(f.size)}</div></div><button class="file-del" onclick="delFile(${f.id})">🗑️</button></div>`;
+  }).join('');
+}
+
+function viewFile(id){
+  const f=files.find(f=>f.id==id);if(!f)return;
+  document.getElementById('viewer-name').textContent=f.name;
+  document.getElementById('viewer-content').innerHTML=f.type.startsWith('image/')?`<img src="${f.data}"/>`:`<div style="color:#fff;font-size:60px">📄</div>`;
+  document.getElementById('viewer').classList.add('open');
+}
+function viewFileData(data,name){
+  document.getElementById('viewer-name').textContent=name;
+  document.getElementById('viewer-content').innerHTML=data.startsWith('data:image')?`<img src="${data}"/>`:`<div style="color:#fff;font-size:60px">📄</div>`;
+  document.getElementById('viewer').classList.add('open');
+}
+function closeViewer(){document.getElementById('viewer').classList.remove('open');}
+
+function renderSvcs(){
+  document.getElementById('svc-grid').innerHTML=SVCS.map(s=>`
+    <div class="svc" onclick="selectSvc('${s.id}')" style="border-color:${s.color}25">
+      <div style="font-size:26px;margin-bottom:6px">${s.icon}</div>
+      <div style="font-size:12px;font-weight:800;color:#1e293b;margin-bottom:4px">${s.title}</div>
+      <div style="font-size:10px;color:#94a3b8;line-height:1.4;margin-bottom:8px">${s.desc}</div>
+      <div style="background:${s.color};color:#fff;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;display:inline-block">طلب ←</div>
+    </div>`).join('');
+}
+
+function renderMyReqs(){
+  const sec=document.getElementById('my-reqs-sec');
+  const mine=reqs.filter(r=>myLocalIds.includes(r.id));
+  if(!mine.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  document.getElementById('my-reqs').innerHTML=mine.slice(0,3).map(r=>`
+    <div class="req-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-weight:800;font-size:13px">${r.svc.icon} ${r.svc.title}</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px">${r.ref} · ${r.date}</div>
+          <div style="margin-top:4px"><span class="dc">📎 ${r.files.length} وثيقة</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <span class="sbadge" style="background:${sb(r.status)};color:${sc(r.status)}">${r.status}</span>
+          <button onclick="printReq('${r.id}')" style="background:#f1f5f9;border:none;color:#475569;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:11px;font-weight:600">🖨️ طباعة</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function selectSvc(id){
+  curSvc=SVCS.find(s=>s.id===id);
+  files=[];
+  document.getElementById('form-hdr').style.background=`linear-gradient(135deg,#1e3a5f,${curSvc.color})`;
+  document.getElementById('svc-icon').textContent=curSvc.icon;
+  document.getElementById('svc-title').textContent=curSvc.title;
+  document.getElementById('svc-desc').textContent=curSvc.desc;
+  document.getElementById('submit-btn').style.background=`linear-gradient(135deg,#1e3a5f,${curSvc.color})`;
+  ['name','badge','phone','cat'].forEach(k=>{const e=document.getElementById('f-'+k);if(e)e.value='';});
+  ['name','badge','cat','docs'].forEach(k=>{const e=document.getElementById('e-'+k);if(e)e.style.display='none';});
+
+  // Service fields
+  const flds=FLDS[id]||[];
+  const fc=document.getElementById('svc-fields');
+  if(!flds.length){fc.style.display='none';}else{
+    fc.style.display='block';
+    fc.innerHTML=`<div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">📋 تفاصيل الطلب</div>`+flds.map(f=>{
+      let inp='';
+      if(f.type==='select') inp=`<select id="sf-${f.key}"><option value="">-- اختر --</option>${(f.opts||[]).map(o=>`<option>${o}</option>`).join('')}</select>`;
+      else if(f.type==='textarea') inp=`<textarea id="sf-${f.key}" rows="3"></textarea>`;
+      else if(f.type==='combo') inp=`<div style="display:flex;gap:8px"><select id="sf-${f.key}-sel" onchange="syncCombo('${f.key}')" style="flex:1"><option value="">-- اختر --</option>${(f.opts||[]).map(o=>`<option value="${o}">${o} دج</option>`).join('')}<option value="other">مبلغ آخر</option></select><input type="number" id="sf-${f.key}" placeholder="اكتب المبلغ" style="flex:1" oninput="syncComboInput('${f.key}')"\/></div>`;
+      else inp=`<input type="${f.type}" id="sf-${f.key}" placeholder="${f.ph||''}"/>`;
+      return `<div class="fw"><label>${f.label}${f.req?' *':''}</label>${inp}<div class="errtxt" id="se-${f.key}">هذا الحقل مطلوب</div></div>`;
+    }).join('');
+  }
+
+  // Required docs
+  const rd=RDOCS[id]||[];
+  const rb=document.getElementById('req-docs-box');
+  if(rd.length){
+    rb.innerHTML=`<div class="req-docs-title">📋 الوثائق المطلوبة:</div><div class="req-docs-list">${rd.map(d=>`• ${d}`).join('<br/>')}</div>`;
+    rb.style.display='block';
+  }else rb.style.display='none';
+
+  renderFiles();
+  show('form');
+}
+
+async function submitReq(){
+  let ok=true;
+  ['name','badge'].forEach(k=>{
+    const v=document.getElementById('f-'+k).value.trim();
+    const e=document.getElementById('e-'+k);
+    if(!v){e.style.display='block';document.getElementById('f-'+k).classList.add('err');ok=false;}
+    else{e.style.display='none';document.getElementById('f-'+k).classList.remove('err');}
+  });
+  if(!document.getElementById('f-cat').value){document.getElementById('e-cat').style.display='block';ok=false;}
+  else document.getElementById('e-cat').style.display='none';
+
+  (FLDS[curSvc.id]||[]).forEach(f=>{
+    if(!f.req)return;
+    const el=document.getElementById('sf-'+f.key);
+    const e=document.getElementById('se-'+f.key);
+    if(!el?.value.trim()){if(e)e.style.display='block';if(el)el.classList.add('err');ok=false;}
+    else{if(e)e.style.display='none';if(el)el.classList.remove('err');}
+  });
+
+  const rd=RDOCS[curSvc.id]||[];
+  if(rd.length&&!files.length){document.getElementById('e-docs').style.display='block';document.getElementById('e-docs').textContent='يجب رفع وثيقة واحدة على الأقل';ok=false;}
+  else document.getElementById('e-docs').style.display='none';
+
+  if(!ok){window.scrollTo(0,200);return;}
+
+  const data={};
+  (FLDS[curSvc.id]||[]).forEach(f=>{const el=document.getElementById('sf-'+f.key);if(el)data[f.key]=el.value;});
+
+  const ref='REQ-'+Math.floor(100000+Math.random()*900000);
+  const submitBtn=document.getElementById('submit-btn');
+  submitBtn.disabled=true;submitBtn.textContent='⏳ جاري الإرسال...';
+
+  try{
+    // رفع كل وثيقة إلى Firebase Storage والحصول على رابطها
+    const uploadedFiles=[];
+    for(const f of files){
+      const path=`requests/${ref}/${Date.now()}_${f.name}`;
+      const task=await storage.ref(path).putString(f.data,'data_url');
+      const url=await task.ref.getDownloadURL();
+      uploadedFiles.push({name:f.name,size:f.size,type:f.type,data:url});
+    }
+
+    const req={
+      ref,
+      svc:{...curSvc},
+      emp:{name:document.getElementById('f-name').value,badge:document.getElementById('f-badge').value,phone:document.getElementById('f-phone').value,cat:document.getElementById('f-cat').value},
+      data,files:uploadedFiles,
+      date:new Date().toLocaleDateString('ar-DZ'),
+      status:'قيد الدراسة',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    const docRef=await db.collection('requests').add(req);
+    myLocalIds.unshift(docRef.id);
+    localStorage.setItem('myReqIds',JSON.stringify(myLocalIds));
+
+    document.getElementById('succ-svc').textContent=curSvc.title;
+    document.getElementById('succ-ref').textContent=ref;
+    document.getElementById('succ-docs').innerHTML=`<span class="dc">📎 تم رفع ${files.length} وثيقة</span>`;
+    show('success');
+  }catch(err){
+    console.error(err);
+    toast('⚠️ تعذّر إرسال الطلب — تحقق من الاتصال بالإنترنت','error');
+  }finally{
+    submitBtn.disabled=false;submitBtn.textContent='✅ إرسال الطلب';
+  }
+}
+
+function getReq(id){return reqs.find(r=>r.id===id)||reqs[0];}
+
+function printReq(id){
+  const r=getReq(id);if(!r)return;
+  const flds=FLDS[r.svc.id]||[];
+  const det=Object.entries(r.data).filter(([,v])=>v).map(([k,v])=>{const l=flds.find(f=>f.key===k)?.label||k;return `<tr><td style="padding:8px 14px;border-bottom:1px solid #eee;color:#64748b;font-weight:600">${l}</td><td style="padding:8px 14px;border-bottom:1px solid #eee;font-weight:700">${v}</td></tr>`;}).join('');
+  const docs=r.files.map(f=>f.type.startsWith('image/')?`<div style="display:inline-block;margin:6px;text-align:center"><img src="${f.data}" style="width:120px;height:120px;object-fit:cover;border-radius:10px;border:2px solid #e2e8f0"/><div style="font-size:10px;color:#64748b;margin-top:3px">${f.name}</div></div>`:`<div style="display:inline-block;margin:6px;text-align:center"><div style="font-size:40px">📄</div><div style="font-size:10px;color:#64748b">${f.name}</div></div>`).join('');
+  const html=`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"><style>body{font-family:'Cairo',sans-serif;margin:0;padding:28px;color:#1e293b}.h{background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;padding:20px 24px;border-radius:14px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center}.b{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${sb(r.status)};color:${sc(r.status)}}.s{margin-bottom:20px}.st{font-size:12px;font-weight:800;color:#94a3b8;margin-bottom:8px}.tb{background:#f8fafc;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0}table{width:100%;border-collapse:collapse}.ft{margin-top:24px;text-align:center;color:#94a3b8;font-size:11px;padding-top:12px;border-top:1px solid #e2e8f0}@media print{body{padding:16px}}</style></head><body>
+  <div class="h"><div><div style="font-size:18px;font-weight:900">🏛️ لجنة الخدمات الاجتماعية</div><div style="font-size:11px;opacity:.8;margin-top:3px">مركز التكوين المهني — فضيلة سعدان — بسكرة</div></div><div style="text-align:left"><div style="font-size:15px;font-weight:900">${r.ref}</div><div style="font-size:11px;opacity:.8;margin-top:3px">📅 ${r.date}</div><div class="b" style="margin-top:4px">${r.status}</div></div></div>
+  <div class="s"><div class="st">الخدمة</div><div style="background:#eff6ff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px"><span style="font-size:30px">${r.svc.icon}</span><div><div style="font-size:16px;font-weight:900;color:#1e40af">${r.svc.title}</div></div></div></div>
+  <div class="s"><div class="st">بيانات الموظف</div><div class="tb"><table><tr><td style="padding:8px 14px;border-bottom:1px solid #eee;color:#64748b;font-weight:600">الاسم واللقب</td><td style="padding:8px 14px;border-bottom:1px solid #eee;font-weight:700">${r.emp.name}</td></tr><tr><td style="padding:8px 14px;border-bottom:1px solid #eee;color:#64748b;font-weight:600">رقم الشارة</td><td style="padding:8px 14px;border-bottom:1px solid #eee;font-weight:700">${r.emp.badge}</td></tr><tr><td style="padding:8px 14px;border-bottom:1px solid #eee;color:#64748b;font-weight:600">الصفة</td><td style="padding:8px 14px;border-bottom:1px solid #eee;font-weight:700">${r.emp.cat}</td></tr><tr><td style="padding:8px 14px;color:#64748b;font-weight:600">الهاتف</td><td style="padding:8px 14px;font-weight:700">${r.emp.phone||'—'}</td></tr></table></div></div>
+  ${det?`<div class="s"><div class="st">تفاصيل الطلب</div><div class="tb"><table>${det}</table></div></div>`:''}
+  ${r.files.length?`<div class="s"><div class="st">الوثائق المرفقة (${r.files.length})</div><div>${docs}</div></div>`:''}
+  <div class="ft">وثيقة رسمية · لجنة الخدمات الاجتماعية · ${new Date().toLocaleDateString('ar-DZ')}</div>
+  <script>window.onload=()=>window.print()<\/script></body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+}
+function printLast(){printReq(reqs[0]?.id);}
+
+function openAdmin(){document.getElementById('admin-modal').classList.add('open');}
+function closeAdmin(){document.getElementById('admin-modal').classList.remove('open');document.getElementById('apass').value='';}
+function adminLogin(){
+  if(document.getElementById('apass').value==='admin123'){closeAdmin();renderAdminScreen();show('admin');}
+  else toast('كلمة المرور غير صحيحة','error');
+}
+
+function renderAdminScreen(){
+  const st=[{l:'الكل',v:reqs.length,c:'#2563eb'},{l:'قيد الدراسة',v:reqs.filter(r=>r.status==='قيد الدراسة').length,c:'#d97706'},{l:'مقبولة',v:reqs.filter(r=>r.status==='مقبول').length,c:'#16a34a'},{l:'مرفوضة',v:reqs.filter(r=>r.status==='مرفوض').length,c:'#dc2626'}];
+  document.getElementById('stats').innerHTML=st.map(s=>`<div class="stat"><div style="font-size:18px;font-weight:900;color:${s.c}">${s.v}</div><div style="font-size:10px;color:#94a3b8;margin-top:2px">${s.l}</div></div>`).join('');
+  const fs=document.getElementById('fsv');
+  fs.innerHTML='<option value="الكل">كل الخدمات</option>'+SVCS.map(s=>`<option>${s.title}</option>`).join('');
+  renderAdmin();
+}
+
+function renderAdmin(){
+  const q=(document.getElementById('srch')?.value||'').trim();
+  const fs=document.getElementById('fst')?.value||'الكل';
+  const fsv=document.getElementById('fsv')?.value||'الكل';
+  const filtered=reqs.filter(r=>{
+    const m=!q||r.ref.includes(q)||r.emp.name.includes(q)||r.emp.badge.includes(q);
+    return m&&(fs==='الكل'||r.status===fs)&&(fsv==='الكل'||r.svc.title===fsv);
+  });
+  document.getElementById('finfo').textContent=(q||fs!=='الكل'||fsv!=='الكل')?`${filtered.length} نتيجة من ${reqs.length}`:'';
+  const list=document.getElementById('admin-list');
+  if(!filtered.length){list.innerHTML=`<div class="card" style="text-align:center;padding:36px;color:#94a3b8"><div style="font-size:36px;margin-bottom:8px">📭</div><div>${!reqs.length?'لا توجد طلبات بعد':'لا توجد نتائج'}</div></div>`;return;}
+  const flds_map=FLDS;
+  list.innerHTML=filtered.map(r=>{
+    const flds=flds_map[r.svc.id]||[];
+    const det=Object.entries(r.data).filter(([,v])=>v).map(([k,v])=>{const l=flds.find(f=>f.key===k)?.label||k;return `<strong>${l}:</strong> ${v}`;}).join(' · ');
+    const docThumb=r.files.map(f=>`<div onclick="viewFileData('${f.data}','${f.name}')" style="cursor:pointer;display:inline-block;margin:3px;text-align:center">${f.type.startsWith('image/')?`<img src="${f.data}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0" loading="lazy"/>`:`<div style="width:50px;height:50px;background:#e0f2fe;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px">📄</div>`}<div style="font-size:9px;color:#64748b;margin-top:2px;max-width:50px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</div></div>`).join('');
+    return `<div class="req-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div style="font-weight:800;font-size:13px">${r.svc.icon} ${r.svc.title}</div>
+          <div style="font-size:11px;color:#475569;margin-top:2px">${r.emp.name} — ${r.emp.cat}</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:1px">📞${r.emp.phone||'—'} · ${r.ref} · ${r.date}</div>
+        </div>
+        <span class="sbadge" style="background:${sb(r.status)};color:${sc(r.status)}">${r.status}</span>
+      </div>
+      ${det?`<div class="dbox">${det}</div>`:''}
+      ${r.files.length?`<div style="margin:8px 0"><div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:4px">📎 الوثائق (${r.files.length}) — اضغط للمعاينة:</div><div>${docThumb}</div></div>`:'<div style="font-size:11px;color:#f59e0b;margin:6px 0">⚠️ لا توجد وثائق</div>'}
+      <div class="arow">
+        <button class="abtn" style="background:#dcfce7;color:#16a34a" onclick="updStatus('${r.id}','مقبول')">✓ قبول</button>
+        <button class="abtn" style="background:#fee2e2;color:#dc2626" onclick="updStatus('${r.id}','مرفوض')">✗ رفض</button>
+        <button class="abtn" style="background:#fef9c3;color:#d97706" onclick="updStatus('${r.id}','قيد الدراسة')">⏳</button>
+        <button class="abtn" style="background:#e0f2fe;color:#0369a1" onclick="printReq('${r.id}')">🖨️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updStatus(id,status){
+  const r=reqs.find(r=>r.id===id);if(!r)return;
+  db.collection('requests').doc(id).update({status}).then(()=>{
+    toast(status==='مقبول'?'✅ تم قبول الطلب':status==='مرفوض'?'❌ تم رفض الطلب':'⏳ تم تعليق الطلب');
+  }).catch(err=>{console.error(err);toast('⚠️ تعذّر تحديث الحالة','error');});
+}
+
+function exportCSV(){
+  if(!reqs.length){toast('لا توجد طلبات','error');return;}
+  const h=['رقم الطلب','الخدمة','الاسم','الشارة','الصفة','الهاتف','التاريخ','الحالة','الوثائق'];
+  const rows=reqs.map(r=>[r.ref,r.svc.title,r.emp.name,r.emp.badge,r.emp.cat,r.emp.phone||'',r.date,r.status,r.files.length]);
+  const csv=[h,...rows].map(row=>row.map(c=>`"${c}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`طلبات_${new Date().toLocaleDateString('ar-DZ').replace(/\//g,'-')}.csv`;a.click();
+  toast('✅ تم تصدير الملف');
+}
+
+// Close notif on outside click
+document.addEventListener('click',e=>{
+  if(notifOpen&&!e.target.closest('#notif-panel')&&!e.target.closest('#notif-btn')){
+    notifOpen=false;document.getElementById('notif-panel').style.display='none';
+  }
+});
+
+// Combo field sync functions
+function syncCombo(key){
+  const sel=document.getElementById('sf-'+key+'-sel');
+  const inp=document.getElementById('sf-'+key);
+  if(sel.value==='other'){inp.value='';inp.focus();}
+  else if(sel.value){inp.value=sel.value;}
+  else inp.value='';
+}
+function syncComboInput(key){
+  const sel=document.getElementById('sf-'+key+'-sel');
+  if(sel) sel.value='other';
+}
+
+renderSvcs();
+</script>
+</body>
+</html>
