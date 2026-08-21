@@ -113,6 +113,7 @@
             var inputVal = document.getElementById('passcode').value.trim();
             var errMsg = document.getElementById('err-msg');
 
+            // كلمة المرور الجديدة
             if (inputVal === "ISSAM07") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('protected-content').style.display = 'block';
@@ -122,8 +123,10 @@
             }
         }
 
+        // خيار استرجاع كلمة المرور في حال نسيانها (يطلب تأكيد بريدك أو رقمك السري الاحتياطي)
         function recoverPassword() {
             let phoneOrEmail = prompt("أدخل رقم الهاتف أو البريد الإلكتروني المسجل للإدارة:");
+            // هنا وضعنا شرطاً افتراضياً للاسترجاع (يمكنك تغييره برقم هاتفك أو بريدك)
             if (phoneOrEmail && (phoneOrEmail.includes("@") || phoneOrEmail.length >= 10)) {
                 alert("تم التحقق بنجاح! كلمة المرور الخاصة بك هي: ISSAM07");
             } else {
@@ -139,4 +142,5 @@
     </script>
 
 </body>
-</html>
+                                       </html>
+                                       
