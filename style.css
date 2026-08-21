@@ -1,0 +1,18 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+body { background: #f4f6f8; color: #333; line-height: 1.6; }
+
+.alert-bar { background: #d9534f; color: white; text-align: center; padding: 10px; font-size: 0.9rem; font-weight: bold; }
+header { background: #003366; color: white; padding: 2rem 1rem; text-align: center; }
+header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+
+.container { width: 92%; max-width: 900px; margin: auto; }
+.card { background: white; padding: 1.5rem; margin: 1.5rem 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+
+.title { color: #003366; margin: 1.5rem 0 1rem 0; font-size: 1.3rem; text-align: center; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.box { background: white; padding: 1.2rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-top: 3px solid #0056b3; }
+.box h3 { color: #003366; margin-bottom: 8px; font-size: 1.1rem; }
+.box p { font-size: 0.9rem; color: #555; }
+
+footer { background: #222; color: white; text-align: center; padding: 1rem; margin-top: 2rem; font-size: 0.85rem; }
