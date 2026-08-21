@@ -14,37 +14,30 @@
         .card { background: white; padding: 1.5rem; margin: 1.5rem 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .title { color: #003366; margin-bottom: 1rem; font-size: 1.2rem; text-align: center; }
         
-        /* تنسيق النموذج وحقول الإدخال */
-        form input, form select, form textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
+        /* تنسيق الأقسام والخدمات */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .box { background: white; padding: 1.2rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-top: 3px solid #0056b3; }
+        .box h3 { color: #003366; margin-bottom: 8px; font-size: 1.1rem; }
+        .box p { font-size: 0.9rem; color: #555; }
+
+        /* النموذج */
+        form input, form select, form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
         form label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #555; }
-        form button {
-            background: #003366;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1rem;
-            font-weight: bold;
-        }
+        form button { background: #003366; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: bold; }
         form button:hover { background: #0056b3; }
-        
+
+        /* زر الدخول الإداري السري */
+        .admin-section { background: #fff3cd; border: 1px solid #ffeeba; padding: 1rem; border-radius: 6px; text-align: center; margin-top: 2rem; }
+        .admin-btn { background: #856404; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
         footer { background: #222; color: white; text-align: center; padding: 1rem; margin-top: 2rem; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <!-- شريط الإعلان الهام -->
+    <!-- شريط الإعلان الهام والآجال النهائية -->
     <div class="alert-bar">
-        ⚠️ تنبيه هام: يوجد أجل نهائي لإيداع الملفات الحالية. يرجى التقيد بالآجال المحددة.
+        ⚠️ تنبيه هام: يوجد أجل نهائي لإيداع الملفات الحالية في واجهة المنصة. يرجى التقيد بالآجال.
     </div>
 
     <!-- رأس الصفحة -->
@@ -55,14 +48,32 @@
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
+    <!-- المحتوى الرئيسي للعمال -->
     <main class="container">
         
-        <!-- نموذج تقديم الطلبات والملفات المباشر -->
+        <!-- الجديد والمنشورات -->
         <section class="card">
-            <h2 class="title">تقديم طلب جديد أو رفع ملفات (أشعة، تذكيرات، شكاوى)</h2>
+            <h2 class="title">المنشورات والجديد والتقارير</h2>
+            <p><strong>التقارير المالية والأدبية:</strong> يتم نشرها هنا بعد كل اجتماع لتكون مرئية للجميع بكل شفافية.</p>
+            <p><strong>أعضاء اللجنة والمراقبون:</strong> الرئيس، أمين المال، الأعضاء الدائمين والاحتياطيين، وفريق الرقابة (معروضة تفاصيل مهامهم للشفافية).</p>
+        </section>
+
+        <!-- الخدمات المتوفرة -->
+        <div class="grid">
+            <div class="box">
+                <h3>السلفيات الاجتماعية</h3>
+                <p>تصل حتى 3 ملايين سنتيم، التسداد من 10 أشهر إلى سنة لجميع العمال. الحالات الطارئة تناقشها اللجنة عبر ملف خاص.</p>
+            </div>
+            <div class="box">
+                <h3>الرحلات والعمرة</h3>
+                <p>رحلات اصطياف بالطلب والقبول عبر المنصة، وعمرة تجري بالقرعة مع تكفل اللجنة بنسبة 30% من المبلغ.</p>
+            </div>
+        </div>
+
+        <!-- تقديم الطلبات والملفات المباشر -->
+        <section class="card">
+            <h2 class="title">تقديم طلب جديد، شكوى، أو رفع ملفات (أشعة، تذكيرات)</h2>
             <form action="https://formspree.io/f/mqkrvkpq" method="POST" enctype="multipart/form-data">
-                
                 <label>الاسم واللقب:</label>
                 <input type="text" name="name" placeholder="أدخل اسمك الكامل" required>
                 
@@ -71,37 +82,53 @@
                 
                 <label>نوع الطلب:</label>
                 <select name="type">
-                    <option value="سلفة">طلب سلفة اجتماعية</option>
-                    <option value="رحلة">طلب رحلة / اصطياف</option>
-                    <option value="ملف_طبي">رفع ملف طبي / أشعة (حالة طارئة)</option>
+                    <option value="سلفة">طلب سلفة</option>
+                    <option value="رحلة أو عمرة">طلب رحلة / عمرة</option>
+                    <option value="ملف طارئ أو أشعة">رفع ملف طارئ / أشعة / تذكير</option>
+                    <option value="مقابلة">طلب مقابلة يوم الاستقبال الأسبوعي</option>
                     <option value="شكوى">شكوى أو استفسار</option>
-                    <option value="مقابلة">طلب مقابلة اللجنة</option>
                 </select>
                 
-                <label>تفاصيل الطلب أو الانشغال:</label>
-                <textarea name="message" placeholder="اكتب تفاصيل طلبك هنا..." style="height: 100px;"></textarea>
+                <label>التفاصيل:</label>
+                <textarea name="message" placeholder="اكتب تفاصيل طلبك أو حالتك الطارئة هنا..." style="height: 80px;"></textarea>
                 
-                <label>إرفاق وثائق أو صور أو ملف PDF:</label>
+                <label>إرفاق ملف (صور أو PDF):</label>
                 <input type="file" name="attachment">
                 
-                <button type="submit">إرسال الطلب مباشرة</button>
+                <button type="submit">إرسال الطلب</button>
             </form>
         </section>
 
-        <!-- معلومات التواصل والاستقبال -->
+        <!-- معلومات الاستقبال -->
         <section class="card">
             <h2 class="title">الاستقبال والتواصل</h2>
-            <p><strong>يوم الاستقبال الأسبوعي:</strong> يحدد ويعلن عنه رسمياً عبر المنصة.</p>
-            <p><strong>العنوان:</strong> مديرية التكوين والتعليم المهنيين - بسكرة</p>
-            <p><strong>الهاتف:</strong> 033 00 00 00 | <strong>البريد:</strong> e-mail@cfpa-biskra.dz</p>
+            <p><strong>يوم الاستقبال الأسبوعي:</strong> يحدد ويعلن عنه رسمياً (يتطلب حجز موعد عبر المنصة).</p>
+            <p><strong>العنوان:</strong> مديرية التكوين والتعليم المهنيين - بسكرة | <strong>الهاتف:</strong> 033 00 00 00</p>
         </section>
+
+        <!-- القسم الإداري السري (محمي بكلمة سر للرئيس وأمين المال) -->
+        <div class="admin-section">
+            <h3>🔐 فضاء الإدارة والمالية (خاص بالرئيس، أمين المال، والمراقبين)</h3>
+            <p style="font-size: 0.85rem; margin: 10px 0;">هذا القسم يحتوي على حساب التعويضات (30%)، المصاريف، والمداخيل ولا يظهر للعمال العاديين.</p>
+            <button class="admin-btn" onclick="checkAdmin()">دخول القسم المالي السري</button>
+        </div>
 
     </main>
 
-    <!-- تذييل الصفحة -->
     <footer>
         <p>جميع الحقوق محفوظة © 2026 - الخدمات الاجتماعية للتكوين المهني بسكرة</p>
     </footer>
 
+    <script>
+        function checkAdmin() {
+            let pass = prompt("أدخل كلمة المرور الخاصة بالرئيس وأمين المال:");
+            if (pass === "biskra2026") { // يمكنك تغيير كلمة المرور هنا
+                alert("مرحباً بك في القسم المالي السري والمصاريف والمداخيل.");
+                // هنا يمكنك لاحقاً توجيههم لصفحة المالية الخاصة
+            } else if (pass !== null) {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
+    </script>
 </body>
 </html>
