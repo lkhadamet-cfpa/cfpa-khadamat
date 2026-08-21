@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الخدمات الاجتماعية - قطاع التكوين المهني بسكرة</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body { background: #f4f6f8; color: #333; line-height: 1.6; }
+        .alert-bar { background: #d9534f; color: white; text-align: center; padding: 10px; font-weight: bold; }
+        header { background: #003366; color: white; padding: 2rem 1rem; text-align: center; }
+        .container { width: 92%; max-width: 900px; margin: auto; padding: 1.5rem 0; }
+        .card { background: white; padding: 1.5rem; margin: 1.5rem 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .title { color: #003366; margin-bottom: 1rem; font-size: 1.3rem; border-bottom: 2px solid #b3d1ff; padding-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .btn-link { display: block; background: #0056b3; color: white; text-align: center; padding: 10px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-top: 5px; }
+        .btn-whatsapp { background: #25d366 !important; }
+        .btn-link:hover { opacity: 0.9; }
+        .file-placeholder { border: 2px dashed #ccc; padding: 20px; text-align: center; margin-top: 10px; color: #888; }
+        .form-group { margin-bottom: 12px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-submit { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #218838; }
+        footer { background: #222; color: white; text-align: center; padding: 1rem; margin-top: 2rem; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="alert-bar">📢 تنبيه: آخر أجل لإيداع الملفات يوم 30 من كل شهر.</div>
+
+    <header>
+        <h1>اللجنة الولائية للخدمات الاجتماعية</h1>
+        <p>قطاع التكوين والتعليم المهنيين - ولاية بسكرة</p>
+    </header>
+
+    <main class="container">
+        
+        <!-- أزرار التواصل السريع -->
+        <section class="card">
+            <h2 class="title">📞 تواصل معنا</h2>
+            <div class="grid">
+                <a href="https://wa.me/213654850150" target="_blank" class="btn-link btn-whatsapp">تواصل عبر واتساب (0654850150)</a>
+                <a href="https://www.mfep.gov.dz" target="_blank" class="btn-link">موقع وزارة التكوين المهني</a>
+            </div>
+        </section>
+
+        <!-- ركن الملفات -->
+        <section class="card">
+            <h2 class="title">📄 الاستمارات والوثائق للتحميل</h2>
+            <div class="file-placeholder">
+                <p>⚠️ <b>ملاحظة لرئيس اللجنة:</b> يمكنك إضافة رابط مجلد ملفاتك (Google Drive) هنا لاحقاً عندما تجهزها.</p>
+            </div>
+        </section>
+
+        <!-- نموذج المراسلة -->
+        <section class="card">
+            <h2 class="title">✉️ فضاء مراسلة اللجنة</h2>
+            <form action="https://formspree.io/f/mljrvjrl" method="POST">
+                <div class="form-group">
+                    <label>الاسم واللقب:</label>
+                    <input type="text" name="الاسم_واللقب" required placeholder="أدخل اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label>الموضوع:</label>
+                    <select name="الموضوع">
+                        <option value="استفسار">استفسار</option>
+                        <option value="طلب سلفة">طلب سلفة</option>
+                        <option value="شكوى">شكوى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>رسالتك:</label>
+                    <textarea name="الرسالة" required placeholder="اكتب تفاصيل طلبك هنا..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">إرسال الطلب إلى بريد رئيس اللجنة 📤</button>
+            </form>
+        </section>
+
+        <!-- زر الدخول الخفي للإدارة -->
+        <div style="text-align:center; cursor:pointer; color:#aaa; font-size:0.8rem; margin-top:20px;" onclick="let p=prompt('أدخل كلمة المرور:'); if(p==='ISSAM07') location.href='https://mail.google.com/';">
+            إدارة الموقع (دخول رئيس اللجنة)
+        </div>
+    </main>
+
+    <footer>جميع الحقوق محفوظة © 2026 - الخدمات الاجتماعية بسكرة</footer>
+</body>
+</html>
