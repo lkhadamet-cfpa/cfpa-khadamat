@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الخدمات الاجتماعية - قطاع التكوين المهني بسكرة</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body { background: #f4f6f8; color: #333; line-height: 1.6; }
+        header { background: #003366; color: white; padding: 2rem 1rem; text-align: center; }
+        .container { width: 92%; max-width: 1000px; margin: auto; padding: 1.5rem 0; }
+        .card { background: white; padding: 1.5rem; margin: 1.5rem 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .title { color: #003366; margin-bottom: 1rem; font-size: 1.2rem; border-bottom: 2px solid #b3d1ff; padding-bottom: 5px; }
+        ul { margin-right: 20px; margin-top: 10px; }
+        li { margin-bottom: 8px; }
+
+        /* تنسيق فضاء الإدارة المخفي */
+        #admin-panel { display: none; background: #fffdf5; border: 2px dashed #856404; padding: 20px; margin-top: 20px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: center; font-size: 0.9rem; }
+        th { background: #fff3cd; color: #856404; }
+
+        /* زر خفي تماماً في أسفل الصفحة */
+        .secret-trigger {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .secret-trigger:hover { color: #333; }
+        
+        .btn-close {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .btn-close:hover { background: #bd2130; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>الجنة الولائية للخدمات الاجتماعية</h1>
+        <p>قطاع التكوين والتعليم المهنيين - ولاية بسكرة</p>
+    </header>
+
+    <main class="container">
+        <!-- الواجهة العادية للعمال (ستختفي مؤقتاً عند دخولك للإدارة وتعود للظهور عند الخروج) -->
+        <div id="worker-section">
+            <section class="card">
+                <h2 class="title">الخدمات والإعلانات العامة للعمال</h2>
+                <p>مرحباً بكم في البوابة الرسمية للخدمات الاجتماعية. تجدون هنا أهم المستجدات والخدمات المتاحة:</p>
+                <ul>
+                    <li>ملفات السلفيات الاجتماعية والتحضير للعمليات القادمة.</li>
+                    <li>الخدمات الصحية والتعويضات الطبية.</li>
+                    <li>الرحلات، العمرة، والنشاطات الثقافية والرياضية.</li>
+                </ul>
+            </section>
+        </div>
+
+        <!-- فضاء الإدارة المخفي (لا يظهر إلا بكلمة المرور) -->
+        <div id="admin-panel" class="card">
+            <h2 class="title" style="color: #856404;">🔐 الفضاء المالي والإداري (خاص برئيس اللجنة)</h2>
+            <p>مرحباً بك، أنت الآن تطلع على لوحة التحكم والميزانية الخاصة بالإدارة.</p>
+            <table>
+                <tr>
+                    <th>البيان / البند</th>
+                    <th>المبلغ المخصص</th>
+                    <th>المبلغ المستهلك</th>
+                    <th>المتبقي</th>
+                </tr>
+                <tr>
+                    <td>السلفيات الاجتماعية والخدمات</td>
+                    <td>- دج</td>
+                    <td>- دج</td>
+                    <td>- دج</td>
+                </tr>
+            </table>
+            <br>
+            <button class="btn-close" onclick="logoutAdmin()">إغلاق الفضاء المحمي والعودة لواجهة العمال</button>
+        </div>
+
+        <!-- نقطة الدخول الخفية لك أنت فقط -->
+        <div class="secret-trigger" onclick="requestAdminAccess()">
+            إدارة الموقع (دخول رئيس اللجنة)
+        </div>
+    </main>
+
+    <footer style="background: #222; color: white; text-align: center; padding: 1rem; margin-top: 2rem; font-size: 0.85rem;">
+        <p>جميع الحقوق محفوظة © 2026 - الخدمات الاجتماعية للتكوين المهني بسكرة</p>
+    </footer>
+
+    <script>
+        function requestAdminAccess() {
+            let pwd = prompt("أدخل كلمة مرور رئيس اللجنة:");
+            if (pwd === "ISSAM07") {
+                // إظهار فضاء الإدارة وإخفاء واجهة العمال لترتيب الرؤية
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('worker-section').style.display = 'none';
+            } else if (pwd !== null) {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
+
+        function logoutAdmin() {
+            // إخفاء فضاء الإدارة وإعادة إظهار واجهة العمال العادية
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('worker-section').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
