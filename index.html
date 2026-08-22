@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الخدمات الاجتماعية - فضيلة سعدان إناث - بسكرة</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body { background: #f4f6f8; color: #333; line-height: 1.6; }
+        .alert-bar { background: #d9534f; color: white; text-align: center; padding: 10px; font-weight: bold; }
+        header { background: #003366; color: white; padding: 2rem 1rem; text-align: center; border-bottom: 4px solid #b3d1ff; }
+        .container { width: 92%; max-width: 1000px; margin: auto; padding: 1.5rem 0; }
+        .card { background: white; padding: 1.5rem; margin: 1.5rem 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .title { color: #003366; margin-bottom: 1rem; font-size: 1.3rem; border-bottom: 2px solid #b3d1ff; padding-bottom: 5px; }
+        .complaint-card { border-top: 4px solid #d9534f; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .btn-link { display: block; background: #0056b3; color: white; text-align: center; padding: 10px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-top: 5px; }
+        .btn-whatsapp { background: #25d366 !important; }
+        .btn-link:hover { opacity: 0.9; }
+        .file-placeholder { border: 2px dashed #ccc; padding: 20px; text-align: center; margin-top: 10px; color: #888; }
+        
+        .services-table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: right; font-size: 0.95rem; }
+        .services-table th, .services-table td { border: 1px solid #ddd; padding: 10px; }
+        .services-table th { background: #003366; color: white; }
+        .services-table tr:nth-child(even) { background: #f9f9f9; }
+
+        .form-group { margin-bottom: 12px; text-align: right; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-submit { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #218838; }
+        .btn-complaint { background: #d9534f; }
+        .btn-complaint:hover { background: #c9302c; }
+        
+        /* شاشة التحقق والولوج */
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 20, 40, 0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 15px; overflow-y: auto; }
+        .auth-box { background: white; padding: 2rem; border-radius: 10px; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-top: 6px solid #003366; margin: auto; }
+        .auth-box h2 { color: #003366; margin-bottom: 0.5rem; font-size: 1.3rem; }
+        .auth-box .subtitle { color: #d9534f; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+        
+        .divider { margin: 20px 0; border-bottom: 1px solid #eee; position: relative; }
+        .divider span { background: white; padding: 0 10px; color: #888; font-size: 0.8rem; position: relative; top: -10px; }
+
+        .admin-login-box { background: #fff3f3; border: 1px solid #f5c6cb; padding: 12px; border-radius: 6px; text-align: center; }
+        .admin-btn { background: #dc3545; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .admin-btn:hover { background: #c82333; }
+
+        /* تنسيق لوحة تحكم الإدارة المتقدمة */
+        .admin-dashboard { background: #1a252f; color: white; min-height: 100vh; padding: 20px; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #34495e; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: #e74c3c; }
+        .tab-content { display: none; background: #2c3e50; padding: 20px; border-radius: 6px; }
+        .tab-content.active { display: block; }
+
+        footer { background: #222; color: white; text-align: center; padding: 1rem; margin-top: 2rem; font-size: 0.85rem; }
+        .hidden-content { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- نافذة الدخول والتحقق -->
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2>الخدمات الاجتماعية</h2>
+            <div class="subtitle">قطاع التكوين والتعليم المهنيين - ولاية بسكرة</div>
+            
+            <form onsubmit="verifyUser(event)" style="margin-bottom: 10px;">
+                <p style="font-size: 0.8rem; color: #555; margin-bottom: 10px; text-align: right;"><b>تسجيل دخول العمال والمستفيدين:</b></p>
+                <div class="form-group">
+                    <label style="font-size: 0.85rem;">الصفة المهنية:</label>
+                    <select id="userRole" required>
+                        <option value="">-- اختر صفتك بدقة --</option>
+                        <option value="عامل">عامل بقطاع التكوين المهني</option>
+                        <option value="متقاعد">متقاعد من القطاع</option>
+                        <option value="من ذوي الحقوق">من ذوي الحقوق</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 0.85rem;">الرقم التعريفي:</label>
+                    <input type="text" id="userIdNum" required placeholder="أدخل رقمك التعريفي هنا">
+                </div>
+                <button type="submit" class="btn-submit" style="background: #003366;">دخول المنصة 🔐</button>
+            </form>
+            <p style="font-size: 0.7rem; color: #888; margin-top: 5px;">(للتجربة، استخدم الأرقام من 202601 إلى 202620)</p>
+
+            <div class="divider"><span>أو</span></div>
+
+            <div class="admin-login-box">
+                <p style="font-size: 0.8rem; color: #dc3545; margin-bottom: 3px; font-weight: bold;">🔐 دخول الإدارة واللجنة:</p>
+                <p style="font-size: 0.75rem; color: #666; margin-bottom: 8px;">(رئيس اللجنة، أمين المال، والأعضاء)</p>
+                <form onsubmit="checkAdmin(event)">
+                    <input type="password" id="adminPass" autocomplete="current-password" placeholder="كلمة المرور السرية (ISSAM07)" required style="margin-bottom: 8px; text-align: center; font-size: 0.9rem;">
+                    <button type="submit" class="admin-btn">تسجيل دخول الإدارة 🚀</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. واجهة العمال والمستفيدين -->
+    <div id="main-platform" class="hidden-content">
+        <div class="alert-bar">📢 تنبيه: آخر أجل لإيداع الملفات يوم 30 من كل شهر.</div>
+        <header>
+            <h1>لجنة الخدمات الاجتماعية - فضيلة سعدان إناث</h1>
+            <p>طريق طولقة - ولاية بسكرة</p>
+        </header>
+        <main class="container">
+            <section class="card">
+                <h2 class="title">📞 تواصل معنا</h2>
+                <div class="grid">
+                    <a href="https://wa.me/213654850150" target="_blank" class="btn-link btn-whatsapp">تواصل عبر واتساب (0654850150)</a>
+                    <a href="https://www.mfep.gov.dz" target="_blank" class="btn-link">موقع وزارة التكوين المهني</a>
+                </div>
+            </section>
+            <section class="card">
+                <h2 class="title">📋 خدمات وامتيازات اللجنة المقدمة للعمال والمستفيدين</h2>
+                <table class="services-table">
+                    <thead>
+                        <tr>
+                            <th>نوع الخدمة / المنحة</th>
+                            <th>التفاصيل والمبلغ / النسبة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>السلف الاجتماعية</b></td>
+                            <td>مبلغ سلفية بقيمة <b>30,000 دج</b> على تقسيط مريح لمدة <b>10 أو 12 شهراً</b>.</td>
+                        </tr>
+                        <tr>
+                            <td><b>العلاج والتحاليل الطبية</b></td>
+                            <td>تكفل أو تعويض الكشوف الطبية، الأشعة، والتحاليل بنسبة تصل إلى <b>30%</b>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="card">
+                <h2 class="title">✉️ فضاء مراسلة اللجنة وطلب الخدمات</h2>
+                <form action="https://formspree.io/f/mljrvjrl" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>الاسم واللقب:</label>
+                        <input type="text" name="الاسم_واللقب" required placeholder="أدخل اسمك الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label>بريدك الإلكتروني:</label>
+                        <input type="email" name="email" required placeholder="example@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>الموضوع:</label>
+                        <select name="الموضوع">
+                            <option value="طلب سلفة مالية (30 ألف دينار)">طلب سلفة مالية (30 ألف دينار)</option>
+                            <option value="ملف صحي (تعويض 30%)">ملف صحي (تعويض 30%)</option>
+                            <option value="استفسار عام">استفسار عام</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>إرفاق وثيقة أو ملف:</label>
+                        <input type="file" name="الوثيقة_المرفقة" accept=".pdf, image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>تفاصيل الطلب:</label>
+                        <textarea name="الرسالة" required placeholder="اكتب تفاصيل طلبك هنا..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">إرسال الطلب والملف للجنة 📤</button>
+                </form>
+            </section>
+        </main>
+        <footer>جميع الحقوق محفوظة © 2026 - لجنة الخدمات الاجتماعية فضيلة سعدان إناث (طريق طولقة - بسكرة)</footer>
+    </div>
+
+
+    <!-- 2. لوحة تحكم الإدارة المتكاملة -->
+    <div id="admin-dashboard-panel" class="admin-dashboard hidden-content">
+        <div class="admin-header">
+            <div>
+                <h2>🛡️ لوحة التحكم الرسمية - لجنة الخدمات الاجتماعية</h2>
+                <p style="font-size: 0.85rem; color: #bdc3c7;">مركز: فضيلة سعدان إناث (طريق طولقة - بسكرة) | رئيس اللجنة وأمين المال والأعضاء</p>
+            </div>
+            <button onclick="location.reload()" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">تسجيل الخروج 🚪</button>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-finances')">💰 متابعة الأموال والحسابات (أمين المال)</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-requests')">📥 طلبات وملفات العمال والرد عليها</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-ministry')">🏛️ التواصل والتقارير مع الوزارة والوصاية</button>
+        </div>
+
+        <!-- القسم الأول: حسابات وأموال اللجنة (تفاعلي بالكامل) -->
+        <div id="tab-finances" class="tab-content active">
+            <h3 style="margin-bottom: 15px; color: #f1c40f;">📊 السجل المالي والميزانية العامة للجنة</h3>
+            <p style="margin-bottom: 15px; font-size: 0.9rem;">يمكن لأمين المال إضافة النفقات أو المداخيل وسيتم تحديث الرصيد وسجل المعاملات فوراً.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div style="background: #34495e; padding: 15px; border-radius: 5px; border-right: 4px solid #2ecc71;">
+                    <p style="font-size: 0.8rem; color: #bdc3c7;">الرصيد الإجمالي المتاح:</p>
+                    <h4 id="total-balance-display" style="font-size: 1.4rem; margin-top: 5px;">2450000 دج</h4>
+                </div>
+                <div style="background: #34495e; padding: 15px; border-radius: 5px; border-right: 4px solid #3498db;">
+                    <p style="font-size: 0.8rem; color: #bdc3c7;">السلف الممنوحة هذا الشهر:</p>
+                    <h4 style="font-size: 1.4rem; margin-top: 5px;">15 سلفية</h4>
+                </div>
+            </div>
+
+            <!-- نموذج إضافة العملية المالية -->
+            <div style="background: #34495e; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <h4 style="margin-bottom: 10px;">إضافة عملية مالية أو مصروف جديد:</h4>
+                <form onsubmit="addTransaction(event)" style="display: grid; grid-template-columns: 2fr 1fr 1fr 120px; gap: 10px;">
+                    <input type="text" id="trans-desc" placeholder="بيان النفقات أو الإيراد (مثال: مصاريف عيد العمال)" style="background: #2c3e50; color: white; border: 1px solid #4e6d8c;" required>
+                    <select id="trans-type" style="background: #2c3e50; color: white; border: 1px solid #4e6d8c;">
+                        <option value="expense">مصروف (خصم من الرصيد)</option>
+                        <option value="income">إيراد / دعم (إضافة للرصيد)</option>
+                    </select>
+                    <input type="number" id="trans-amount" placeholder="المبلغ بالدينار" style="background: #2c3e50; color: white; border: 1px solid #4e6d8c;" required>
+                    <button type="submit" class="btn-submit" style="padding: 10px;">تسجيل ➕</button>
+                </form>
+            </div>
+
+            <!-- جدول المعاملات المسجلة -->
+            <div style="background: #34495e; padding: 15px; border-radius: 5px;">
+                <h4 style="margin-bottom: 10px;">سجل المعاملات المسجلة حديثاً:</h4>
+                <table class="services-table" style="background: #2c3e50;">
+                    <thead>
+                        <tr>
+                            <th>البيان</th>
+                            <th>النوع</th>
+                            <th>المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-table-body">
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #bdc3c7;">لا توجد معاملات مسجلة في الجلسة الحالية حتى الآن.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- القسم الثاني: طلبات وملفات العمال -->
+        <div id="tab-requests" class="tab-content">
+            <h3 style="margin-bottom: 15px; color: #3498db;">📥 طلبات، وثائق، وشكاوى العمال والمستفيدين</h3>
+            <div style="background: #34495e; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #4e6d8c; padding-bottom: 8px; margin-bottom: 8px;">
+                    <b>👤 الطلب وارد من: أحمد بن طاهر (عامل)</b>
+                    <span style="font-size: 0.75rem; background: #e67e22; padding: 3px 8px; border-radius: 3px;">طلب سلفة مالية (30 ألف)</span>
+                </div>
+                <p style="font-size: 0.9rem; color: #ecf0f1; margin-bottom: 10px;">التفاصيل: أطلب الحصول على سلفية اجتماعية بقيمة 30 ألف دينار لمدة 12 شهراً.</p>
+                <a href="mailto:example@gmail.com?subject=الرد على طلب السلفة الاجتماعية&body=مرحباً أحمد، تم قبول ملفكم..." class="btn-link" style="display: inline-block; background: #27ae60; padding: 6px 15px; font-size: 0.85rem;">رد مباشرة على البريد الإلكتروني ✉️</a>
+            </div>
+        </div>
+
+        <!-- القسم الثالث: الوزارة والتقارير -->
+        <div id="tab-ministry" class="tab-content">
+            <h3 style="margin-bottom: 15px; color: #2ecc71;">🏛️ فضاء التواصل وإرسال التقارير للوزارة (الوصاية)</h3>
+            <form onsubmit="sendMinistryReport(event)" style="background: #34495e; padding: 15px; border-radius: 5px;">
+                <div class="form-group">
+                    <label style="color: white;">نوع التقرير الموجه للوزارة:</label>
+                    <select id="repType" style="background: #2c3e50; color: white;" required>
+                        <option value="الحصيلة الشهرية للخدمات الاجتماعية">الحصيلة الشهرية للخدمات الاجتماعية</option>
+                        <option value="التقرير المالي الثلاثي">التقرير المالي الثلاثي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="color: white;">إرفاق ملف التقرير (PDF):</label>
+                    <input type="file" accept=".pdf" style="background: #2c3e50; color: white;" required>
+                </div>
+                <div class="form-group">
+                    <label style="color: white;">ملاحظات أو رسالة مرفقة للوزارة:</label>
+                    <textarea id="repText" placeholder="اكتب نص المراسلة أو التقرير هنا..." style="background: #2c3e50; color: white;" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit" style="background: #2980b9;">إرسال التقرير رسمياً إلى الوزارة 📤</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const allowedIds = [
+            "202601", "202602", "202603", "202604", "202605",
+            "202606", "202607", "202608", "202609", "202610",
+            "202611", "202612", "202613", "202614", "202615",
+            "202616", "202617", "202618", "202619", "202620"
+        ];
+
+        let currentBalance = 2450000; // الرصيد الابتدائي
+
+        function verifyUser(event) {
+            event.preventDefault();
+            let role = document.getElementById('userRole').value;
+            let idNum = document.getElementById('userIdNum').value.trim();
+            if (!role) { alert('يرجى اختيار الصفة أولاً.'); return; }
+            if (allowedIds.includes(idNum)) {
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.getElementById('main-platform').classList.remove('hidden-content');
+                alert('مرحباً بك، تم التحقق من هويتك بنجاح.');
+            } else {
+                alert('عذراً، الرقم التعريفي غير صحيح أو غير مسجل.');
+            }
+        }
+
+        function checkAdmin(event) {
+            event.preventDefault();
+            let pass = document.getElementById('adminPass').value;
+            if(pass === 'ISSAM07') {
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.getElementById('admin-dashboard-panel').classList.remove('hidden-content');
+                alert('مرحباً بك في لوحة تحكم الإدارة.');
+            } else {
+                alert('كلمة المرور الإدارية غير صحيحة!');
+            }
+        }
+
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // البرمجية المسؤولة عن تحديث الرصيد وإضافة العمليات في الجدول
+        function addTransaction(event) {
+            event.preventDefault();
+            let desc = document.getElementById('trans-desc').value;
+            let type = document.getElementById('trans-type').value;
+            let amount = parseFloat(document.getElementById('trans-amount').value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('يرجى إدخال مبلغ صحيح.');
+                return;
+            }
+
+            let tbody = document.getElementById('transactions-table-body');
+            // إزالة رسالة "لا توجد معاملات" إذا كانت موجودة
+            if (tbody.innerHTML.includes('لا توجد معاملات')) {
+                tbody.innerHTML = '';
+            }
+
+            if (type === 'expense') {
+                currentBalance -= amount;
+                tbody.innerHTML += `<tr><td>${desc}</td><td style="color:#e74c3c;">مصروف</td><td>-${amount.toLocaleString()} دج</td></tr>`;
+            } else {
+                currentBalance += amount;
+                tbody.innerHTML += `<tr><td>${desc}</td><td style="color:#2ecc71;">إيراد / دعم</td><td>+${amount.toLocaleString()} دج</td></tr>`;
+            }
+
+            // تحديث عرض الرصيد الإجمالي في الواجهة
+            document.getElementById('total-balance-display').innerText = currentBalance.toLocaleString() + ' دج';
+            
+            // إعادة ضبط حقول النموذج
+            document.getElementById('trans-desc').value = '';
+            document.getElementById('trans-amount').value = '';
+            alert('تم تسجيل العملية وتحديث الرصيد بنجاح!');
+        }
+
+        function sendMinistryReport(event) {
+            event.preventDefault();
+            alert('تم إرسال التقرير بنجاح إلى الجهات المعنية بالوزارة.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
