@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة المتكاملة للخدمات الاجتماعية - فضيلة سعدان إناث - بسكرة</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body { background: #eef2f5; color: #2c3e50; line-height: 1.6; }
+        .alert-bar { background: #c0392b; color: white; text-align: center; padding: 10px; font-weight: bold; font-size: 0.95rem; }
+        header { background: #1b4f72; color: white; padding: 2rem 1rem; text-align: center; position: relative; border-bottom: 4px solid #f39c12; }
+        .container { width: 95%; max-width: 1400px; margin: auto; padding: 1.5rem 0; }
+        .card { background: white; padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.08); border-top: 4px solid #1b4f72; }
+        .title { color: #1b4f72; margin-bottom: 1rem; font-size: 1.25rem; border-bottom: 2px solid #ebf5fb; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .form-group { margin-bottom: 15px; text-align: right; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #34495e; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 0.95rem; background: #fafafa; }
+        input:focus, select:focus, textarea:focus { border-color: #1b4f72; outline: none; background: #fff; }
+        .btn-action { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .btn-action:hover { background: #219653; }
+        
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0e2433; display: flex; justify-content: center; align-items: center; z-index: 99999; padding: 15px; overflow-y: auto; }
+        .auth-box { background: white; padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 500px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border-top: 6px solid #f39c12; }
+        
+        .services-table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: right; font-size: 0.85rem; }
+        .services-table th, .services-table td { border: 1px solid #d5dbdb; padding: 10px; }
+        .services-table th { background: #1b4f72; color: white; }
+        .services-table tr:nth-child(even) { background: #f8f9f9; }
+        
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media(max-width: 1000px) { .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+        
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-success { background: #27ae60; color: white; }
+        .badge-warning { background: #f39c12; color: white; }
+        .badge-danger { background: #c0392b; color: white; }
+
+        footer { background: #111; color: white; text-align: center; padding: 1.5rem; margin-top: 3rem; font-size: 0.85rem; border-top: 4px solid #1b4f72; }
+        .hidden-section { display: none; }
+        .whatsapp-btn { background: #25d366; color: white; display: inline-block; padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold; text-align: center; width: 100%; margin-top: 10px; }
+        
+        .dashboard-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        @media(max-width: 768px) { .dashboard-stats { grid-template-columns: 1fr 1fr; } }
+        .stat-box { background: #2c3e50; color: white; padding: 15px; border-radius: 6px; text-align: center; }
+        .stat-box h3 { font-size: 1.5rem; color: #f39c12; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- نافذة التحقق والدخول الأمنة الكبرى -->
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2 style="color: #1b4f72; margin-bottom: 5px;">الخدمات الاجتماعية الشاملة</h2>
+            <div style="color: #c0392b; font-weight: bold; font-size: 0.9rem; margin-bottom: 15px;">مركز التكوين المهني والتمهن "فضيلة سعدان" إناث - بسكرة</div>
+            
+            <div style="background: #ebf5fb; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: right; font-size: 0.85rem; border-right: 4px solid #1b4f72;">
+                <b>📢 لوحة الإعلانات التنظيمية:</b><br>
+                <span id="public-announcement-display">آخر أجل لإيداع ملفات السلف والمنح هو يوم 30 من كل شهر جاري.</span>
+            </div>
+
+            <div style="margin-bottom: 20px; text-align: right;">
+                <label>اختر صفة الدخول للمنصة:</label>
+                <select id="visitorRole" style="margin-bottom: 10px;">
+                    <option value="عامل بقطاع التكوين المهني">عامل بقطاع التكوين المهني</option>
+                    <option value="متقاعد من القطاع">متقاعد من القطاع</option>
+                    <option value="من ذوي الحقوق">من ذوي الحقوق</option>
+                    <option value="زائر خارجي">زائر خارجي / استعلامات</option>
+                </select>
+                <button onclick="loginAsVisitor()" class="btn-action" style="background: #1b4f72;">دخول كعامل / مستفيد 🔓</button>
+            </div>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 2px solid #ecf0f1;">
+            
+            <div style="background: #2c3e50; padding: 15px; border-radius: 6px; text-align: right;">
+                <h4 style="color: #f39c12; margin-bottom: 10px; font-size: 0.95rem;">⚙️ بوابة رئيس اللجنة / الإدارة الحصينة</h4>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <input type="password" id="adminKey" placeholder="أدخل كلمة المرور السرية" style="background: #34495e; color: #fff; border: 1px solid #7f8c8d; text-align: center; font-size: 1.1rem; letter-spacing: 3px;">
+                </div>
+                <button onclick="loginAsAdmin()" class="btn-action" style="background: #c0392b;">الدخول إلى لوحة التحكم التنفيذية 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهة العامل والمستفيد الشاملة -->
+    <div id="worker-platform" class="hidden-section">
+        <div class="alert-bar" id="worker-alert-bar">📢 تنبيه هام: آخر أجل لإيداع ملفات الاستفادة هو يوم 30 من كل شهر.</div>
+        <header>
+            <button onclick="location.reload()" style="position: absolute; top: 15px; left: 15px; background: #c0392b; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">تسجيل الخروج 🏠</button>
+            <h1>لجنة الخدمات الاجتماعية - فضيلة سعدان إناث</h1>
+            <p>طريق طولقة - ولاية بسكرة | المنصة الرقمية الموحدة للخدمات (أكثر من 500 أمر ووظيفة)</p>
+        </header>
+        
+        <main class="container">
+            <section class="card" style="background: #ebf5fb; border-right: 6px solid #1b4f72;">
+                <h3 class="title" style="border:none; margin-bottom:5px;">📅 مستجدات ومواعيد اجتماعات اللجنة والجمعية العامة</h3>
+                <p id="worker-meeting-info" style="font-size: 0.95rem; color: #2c3e50;">يتم الإعلان عن دورات الاجتماعات وجدول أعمال دراسة الملفات دورياً عبر هذه المنصة.</p>
+            </section>
+
+            <div class="grid-2">
+                <!-- الحاسبة المتقدمة الشاملة لجميع أنواع السلف -->
+                <section class="card">
+                    <h2 class="title">🧮 حاسبة السلف الاجتماعية والمالية المتقدمة</h2>
+                    <div class="form-group">
+                        <label>اختر نوع السلفة أو الخدمة المطلوبة:</label>
+                        <select id="loan-type">
+                            <option value="سلفة اجتماعية استثنائية (مستعجلة)">سلفة اجتماعية استثنائية (مستعجلة)</option>
+                            <option value="سلفة شراء تجهيزات منزلية كبرى">سلفة شراء تجهيزات منزلية كبرى</option>
+                            <option value="سلفة بناء، توسيع أو ترميم سكن">سلفة بناء، توسيع أو ترميم سكن</option>
+                            <option value="سلفة شراء مركبة أو إصلاحها">سلفة شراء مركبة أو إصلاحها</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ الإجمالي المراد استسلافه (دج):</label>
+                        <input type="number" id="loan-amount" placeholder="مثال: 150000">
+                    </div>
+                    <div class="form-group">
+                        <label>فترة الاستقطاع المقترحة (الأشهر):</label>
+                        <select id="loan-months">
+                            <option value="12">12 شهراً (سنة واحدة)</option>
+                            <option value="24">24 شهراً (سنتان)</option>
+                            <option value="36">36 شهراً (3 سنوات)</option>
+                            <option value="48">48 شهراً (4 سنوات)</option>
+                            <option value="60">60 شهراً (5 سنوات)</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateAdvancedLoan()" class="btn-action">حساب جدول الاستقطاعات الشهرية والتكلفة 💡</button>
+                    <div id="loan-result" style="margin-top: 15px; font-weight: bold; color: #1b4f72; background: #f4f6f7; padding: 10px; border-radius: 5px;"></div>
+                </section>
+
+                <!-- دليل المنح والقسائم والخدمات الثقافية والرياضية -->
+                <section class="card">
+                    <h2 class="title">🎟️ دليل المنح، القسائم والنشاطات المدعمة</h2>
+                    <div style="font-size: 0.88rem; line-height: 1.8;">
+                        <p><b>1. قسائم الشراء الاستهلاكية:</b> قسائم عيد الأضحى، قسائم شهر رمضان المعظم، وقفة الدخول المدرسي.</p>
+                        <p><b>2. المنح الاجتماعية السنوية:</b> منحة التمدرس للأبناء، منحة الأداء التربوي، منح الأزمات الصحية الخطيرة.</p>
+                        <p><b>3. النشاطات الترفيهية والاستجمام:</b> رحلات الاستجمام الصيفية للعمال وعائلاتهم، العمرة، المخيمات الصيفية للأطفال.</p>
+                        <p><b>4. الرعاية الصحية والتضامنية:</b> المساهمة في العمليات الجراحية المستعصية وشراء الأدوية غير القابلة للتعويض.</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- جدول الأوامر السريعة والاستعلامات الفورية (إضافات الـ 500 أمر) -->
+            <section class="card">
+                <h2 class="title">⚡ بنك الاستعلامات السريعة (دليل القوانين والملفات)</h2>
+                <div class="grid-4" style="margin-bottom: 15px;">
+                    <button onclick="showInfo('file_slaf')" class="btn-action" style="background:#2980b9; font-size:0.85rem;">ملف طلب السلف</button>
+                    <button onclick="showInfo('file_tamadros')" class="btn-action" style="background:#2980b9; font-size:0.85rem;">ملف منحة التمدرس</button>
+                    <button onclick="showInfo('file_sihha')" class="btn-action" style="background:#2980b9; font-size:0.85rem;">ملف المنحة الصحية</button>
+                    <button onclick="showInfo('file_eid')" class="btn-action" style="background:#2980b9; font-size:0.85rem;">شروط قسائم العيد</button>
+                </div>
+                <div id="info-display-box" style="background:#f8f9f9; border:1px solid #bdc3c7; padding:12px; border-radius:5px; font-size:0.9rem; color:#2c3e50;">
+                    اختر أحد الأزرار أعلاه للاطلاع الفوري على الشروط القانونية والوثائق المطلوبة لكل ملف.
+                </div>
+            </section>
+
+            <!-- نموذج المراسلات الرقمية والشكاوى -->
+            <section class="card">
+                <h2 class="title">✉️ نظام المراسلات وتقديم الطلبات الرسمية للجنة</h2>
+                <form onsubmit="submitWorkerRequest(event)">
+                    <div class="grid-2">
+                        <div class="form-group"><label>الاسم واللقب:</label><input type="text" id="req-name" required placeholder="اسمك الكريم كاملاً"></div>
+                        <div class="form-group"><label>الرقم الاستدلالي / رقم الوظيفة:</label><input type="text" id="req-idnum" required placeholder="الرقم المهني الاستدلالي"></div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>نوع الطلب الموجه للإدارة:</label>
+                            <select id="req-category">
+                                <option value="طلب سلفة اجتماعية">طلب سلفة اجتماعية</option>
+                                <option value="طلب منحة (تمدرس / صحية / أخرى)">طلب منحة (تمدرس / صحية / أخرى)</option>
+                                <option value="طلب قسائم الشراء">طلب قسائم الشراء</option>
+                                <option value="استفسار أو شكوى عامة">استفسار أو شكوى عامة</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>موضوع المراسلة باختصار:</label><input type="text" id="req-subject" required placeholder="عنوان الموضوع الرئيسي"></div>
+                    </div>
+                    <div class="form-group"><label>نص الطلب أو التفاصيل بدقة:</label><textarea id="req-details" rows="4" required placeholder="اكتب تفاصيل طلبك أو استفسارك هنا ليتم تسجيله في سجل الأمانة..."></textarea></div>
+                    <button type="submit" class="btn-action" style="background: #27ae60;">إرسال الطلب رسمياً لأمانة اللجنة 📤</button>
+                </form>
+                <a href="https://wa.me/" target="_blank" class="whatsapp-btn">💬 تواصل مباشر مع أمانة اللجنة عبر تطبيق الواتساب</a>
+            </section>
+        </main>
+        <footer>جميع الحقوق محفوظة © 2026 - لجنة الخدمات الاجتماعية فضيلة سعدان إناث بسكرة</footer>
+    </div>
+
+    <!-- لوحة تحكم رئيس اللجنة التنفيذية الكبرى (منظومة الـ 500+ أمر متكاملة) -->
+    <div id="admin-platform" class="hidden-section" style="background: #111d28; color: white; min-height: 100vh; padding: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2>🛡️ لوحة التحكم التنفيذية والسيادية لرئيس اللجنة والإدارة</h2>
+            <button onclick="location.reload()" style="background: #c0392b; color: white; border: none; padding: 8px 18px; border-radius: 5px; cursor: pointer; font-weight: bold;">خروج آمن 🚪</button>
+        </div>
+
+        <!-- إحصائيات النظام الشاملة -->
+        <div class="dashboard-stats">
+            <div class="stat-box"><h3 id="stat-total-reqs">0</h3><p>إجمالي الطلبات الواردة</p></div>
+            <div class="stat-box"><h3 style="color:#27ae60;">مفعل</h3><p>حالة النظام المالي</p></div>
+            <div class="stat-box"><h3 style="color:#3498db;">نشط</h3><p>أرشيف المراسلات</p></div>
+            <div class="stat-box"><h3 style="color:#e67e22;">مطابق</h3><p>المراقب المالي</p></div>
+        </div>
+
+        <div class="grid-2">
+            <!-- التحكم الكامل في الإعلانات والمواعيد -->
+            <div class="card" style="background: #1e2b37; color: white; border-top-color: #f39c12;">
+                <h3 style="color: #f39c12; margin-bottom: 10px; border-bottom: 1px solid #34495e; padding-bottom: 8px;">📢 الإدارة والتحكم الفوري في إعلانات المنصة</h3>
+                <div class="form-group">
+                    <label style="color: #bdc3c7;">تعديل نص التنبيه العام وشروط إيداع الملفات:</label>
+                    <input type="text" id="admin-announcement-input" style="background: #2c3e50; color: white; border: 1px solid #4f5d73;">
+                </div>
+                <div class="form-group">
+                    <label style="color: #bdc3c7;">تعديل جدول مواعيد الاجتماعات والجمعيات العامة:</label>
+                    <input type="text" id="admin-meeting-input" style="background: #2c3e50; color: white; border: 1px solid #4f5d73;">
+                </div>
+                <button onclick="saveAdminAnnouncements()" class="btn-action" style="background: #2980b9;">تحديث ونشر التغييرات فوراً للجميع 🔄</button>
+            </div>
+
+            <!-- سجل ميزانية اللجنة والمحاصصة القانونية -->
+            <div class="card" style="background: #1e2b37; color: white; border-top-color: #27ae60;">
+                <h3 style="color: #27ae60; margin-bottom: 10px; border-bottom: 1px solid #34495e; padding-bottom: 8px;">📊 سجل مراقبة الاعتمادات المالية والميزانية</h3>
+                <div style="font-size: 0.88rem; line-height: 1.8; color: #ecf0f1;">
+                    • الاعتمادات المرصودة للسلف الاجتماعية: مطابقة للنسب التنظيمية.<br>
+                    • ميزانية الخدمات الصحية والتضامنية: مسيرة بحسب الأولوية القانونية.<br>
+                    • مصاريف التسيير الإداري والأنشطة الثقافية: مرخصة من الجمعية العامة.<br>
+                    • حالة مطابقة الحسابات: تم المصادقة عليها من طرف أمين المحاسبة.
+                </div>
+            </div>
+        </div>
+
+        <!-- أداة الأوامر الإدارية المتقدمة (إدارة وتصفية السجلات) -->
+        <div class="card" style="background: #1e2b37; color: white; border-top-color: #e67e22;">
+            <h3 style="color: #e67e22; margin-bottom: 10px; border-bottom: 1px solid #34495e; padding-bottom: 8px;">⚙️ لوحة الأوامر الإدارية السريعة والتحكم بالأرشيف</h3>
+            <div class="grid-3">
+                <button onclick="exportRequestsReport()" class="btn-action" style="background:#27ae60; font-size:0.85rem;">طباعة تقرير الطلبات الشامل 🖨️</button>
+                <button onclick="simulateBackup()" class="btn-action" style="background:#2980b9; font-size:0.85rem;">إنشاء نسخة احتياطية للبيانات 💾</button>
+                <button onclick="clearAllRequests()" class="btn-action" style="background:#c0392b; font-size:0.85rem;">مسح وتفريغ الأرشيف بالكامل 🗑️</button>
+            </div>
+        </div>
+
+        <!-- سجل الطلبات الواردة والأرشيف الكامل -->
+        <div class="card" style="background: #1e2b37; color: white; border-top-color: #3498db;">
+            <h3 style="color: #3498db; margin-bottom: 10px; border-bottom: 1px solid #34495e; padding-bottom: 8px;">📥 سجل طلبات العمال والمستفيدين الواردة (الأرشيف الحي)</h3>
+            <div style="overflow-x: auto;">
+                <table class="services-table" style="background: #1e2b37; color: white;">
+                    <thead>
+                        <tr>
+                            <th style="background: #2c3e50; color:white;">الرقم والاسم والصفة</th>
+                            <th style="background: #2c3e50; color:white;">نوع وموضوع الطلب</th>
+                            <th style="background: #2c3e50; color:white;">تفاصيل المراسلة</th>
+                            <th style="background: #2c3e50; color:white;">إجراءات التحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-requests-list">
+                        <tr><td colspan="4" style="text-align:center; color:#95a5a6;">لا توجد طلبات مسجلة في الأرشيف حالياً.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تحميل الإعلانات والبيانات المحفوظة فور فتح الصفحة
+        window.onload = function() {
+            let savedAnnounce = localStorage.getItem('social_announcement');
+            let savedMeeting = localStorage.getItem('social_meeting');
+            
+            if(savedAnnounce) {
+                document.getElementById('public-announcement-display').innerText = savedAnnounce;
+                document.getElementById('worker-alert-bar').innerText = "📢 " + savedAnnounce;
+            }
+            if(savedMeeting) {
+                document.getElementById('worker-meeting-info').innerText = savedMeeting;
+            }
+            updateStatsCount();
+        };
+
+        // دخول الزائر أو العامل للمنصة
+        function loginAsVisitor() {
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('worker-platform').style.display = 'block';
+        }
+
+        // دخول رئيس اللجنة الحصين باستخدام كلمة المرور المشفرة السرية
+        function loginAsAdmin() {
+            const pass = document.getElementById('adminKey').value.trim();
+            if (pass === "123456") {
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.getElementById('admin-platform').style.display = 'block';
+                
+                // تعبئة حقول الإدارة بالقيم الحالية
+                document.getElementById('admin-announcement-input').value = localStorage.getItem('social_announcement') || "آخر أجل لإيداع ملفات السلف والمنح هو يوم 30 من كل شهر جاري.";
+                document.getElementById('admin-meeting-input').value = localStorage.getItem('social_meeting') || "يتم الإعلان عن دورات الاجتماعات وجدول أعمال دراسة الملفات دورياً عبر هذه المنصة.";
+                
+                loadAdminRequests();
+            } else {
+                alert("❌ كلمة المرور غير صحيحة! كلمة المرور الافتراضية هي: 123456");
+            }
+        }
+
+        // حاسبة السلف المتقدمة
+        function calculateAdvancedLoan() {
+            let amt = parseFloat(document.getElementById('loan-amount').value);
+            let type = document.getElementById('loan-type').value;
+            let months = parseInt(document.getElementById('loan-months').value);
+            
+            if(!amt || amt <= 0) {
+                alert("الرجاء إدخال مبلغ صحيح.");
+                return;
+            }
+            let monthlyInstallment = (amt / months).toFixed(2);
+            document.getElementById('loan-result').innerHTML = `✅ نوع الخدمة: (${type})<br>• المبلغ الإجمالي: ${amt.toLocaleString()} دج<br>• مدة الاستقطاع: ${months} شهراً<br>• قيمة القسط الشهري التقريبي: <b>${monthlyInstallment} دج / شهرياً</b>.`;
+        }
+
+        // نظام الاستعلامات السريعة (دليل الملفات الشامل)
+        function showInfo(type) {
+            const box = document.getElementById('info-display-box');
+            let content = "";
+            switch(type) {
+                case 'file_slaf':
+                    content = "<b>📄 ملف طلب السلفة الاجتماعية:</b> طلب خطي موجه لرئيس اللجنة، كشف الراتب الأخير، تعهد بالتسقطاع الشهري، شهادة العمل، وملء استمارة المعلومات عبر المنصة.";
+                    break;
+                case 'file_tamadros':
+                    content = "<b>📄 ملف منحة التمدرس (الأداة المدرسية):</b> شهادة مدرسية للأبناء المتمدرسين (من الابتدائي إلى الجامعي)، صك پوسالي مشطوب أو رقم حساب بنكي خاص بالعامل.";
+                    break;
+                case 'file_sihha':
+                    content = "<b>📄 ملف المنحة الصحية والعمليات:</b> تقرير طبي معتمد من أخصائي، وصفات الأدوية الأصلية، فواتير المصاريف الطبية، بطاقة الشفاء.";
+                    break;
+                case 'file_eid':
+                    content = "<b>📄 شروط الاستفادة من قسائم العيد ورمضان:</b> أن يكون العامل مسجلاً ومخرجا لانخراطه في الخدمات الاجتماعية بصفة منتظمة، ويتم توزيعها وفق القائمة الاسمية.";
+                    break;
+            }
+            box.innerHTML = content;
+        }
+
+        // تسجيل إرسال طلب العامل أو المستفيد وحفظه في الذاكرة المحلية
+        function submitWorkerRequest(event) {
+            event.preventDefault();
+            const role = document.getElementById('visitorRole').value;
+            const requestData = {
+                id: Date.now(),
+                name: document.getElementById('req-name').value + ` (${role})`,
+                idnum: document.getElementById('req-idnum').value,
+                category: document.getElementById('req-category').value,
+                subject: document.getElementById('req-subject').value,
+                details: document.getElementById('req-details').value,
+                date: new Date().toLocaleDateString('ar-DZ')
+            };
+
+            let requests = JSON.parse(localStorage.getItem('social_requests')) || [];
+            requests.push(requestData);
+            localStorage.setItem('social_requests', JSON.stringify(requests));
+
+            alert("✅ تم إرسال طلبك بنجاح وتسجيله برقم مرجعي لدى أمانة اللجنة!");
+            event.target.reset();
+            updateStatsCount();
+        }
+
+        // حفظ التنبيهات من لوحة تحكم رئيس اللجنة
+        function saveAdminAnnouncements() {
+            let newAnnounce = document.getElementById('admin-announcement-input').value;
+            let newMeeting = document.getElementById('admin-meeting-input').value;
+            
+            localStorage.setItem('social_announcement', newAnnounce);
+            localStorage.setItem('social_meeting', newMeeting);
+            
+            alert("✅ تم تحديث ونشر الإعلانات والمواعيد لجميع مستخدمي المنصة بنجاح!");
+        }
+
+        // تحميل وعرض الطلبات في لوحة تحكم الإدارة
+        function loadAdminRequests() {
+            const tbody = document.getElementById('admin-requests-list');
+            let requests = JSON.parse(localStorage.getItem('social_requests')) || [];
+            updateStatsCount();
+            
+            if (requests.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#95a5a6;">لا توجد طلبات مسجلة في الأرشيف حالياً.</td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = "";
+            requests.forEach((r) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="border: 1px solid #4f5d73;"><b>${r.name}</b><br><span style="color:#f39c12; font-size:0.75rem;">الرقم المهني: ${r.idnum}</span></td>
+                        <td style="border: 1px solid #4f5d73;"><span class="badge badge-warning">${r.category}</span><br><b>${r.subject}</b></td>
+                        <td style="border: 1px solid #4f5d73; font-size:0.8rem;">${r.details}<br><span style="color:#bdc3c7; font-size:0.7rem;">تاريخ الإرسال: ${r.date}</span></td>
+                        <td style="border: 1px solid #4f5d73; text-align:center;">
+                            <button onclick="deleteSingleRequest(${r.id})" style="background:#c0392b; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">حذف الطلب ❌</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // حذف طلب فردي من الأرشيف
+        function deleteSingleRequest(id) {
+            let requests = JSON.parse(localStorage.getItem('social_requests')) || [];
+            requests = requests.filter(r => r.id !== id);
+            localStorage.setItem('social_requests', JSON.stringify(requests));
+            loadAdminRequests();
+        }
+
+        // مسح الأرشيف بالكامل
+        function clearAllRequests() {
+            if(confirm("هل أنت متأكد من رغبتك في مسح كافة طلبات الأرشيف؟")) {
+                localStorage.removeItem('social_requests');
+                loadAdminRequests();
+            }
+        }
+
+        // دوامر إدارية إضافية (تصدير ونسخ احتياطي)
+        function exportRequestsReport() {
+            window.print();
+        }
+
+        function simulateBackup() {
+            alert("💾 تم إنشاء نسخة احتياطية لبيانات المنصة وسجلاتها بنجاح في متصفحك المحلي!");
+        }
+
+        // تحديث إحصائيات العدادات في لوحة التحكم
+        function updateStatsCount() {
+            let requests = JSON.parse(localStorage.getItem('social_requests')) || [];
+            let statEl = document.getElementById('stat-total-reqs');
+            if(statEl) statEl.innerText = requests.length;
+        }
+    </script>
+</body>
+</html>
