@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1769aa">
+<title>منصة لجنة الخدمات الاجتماعية</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Tahoma,Arial,sans-serif;
+ background:#f3f6fa;
+ color:#172033
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+header{
+ background:linear-gradient(135deg,#1769aa,#123b6d);
+ color:#fff;
+ padding:14px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ position:sticky;
+ top:0;
+ z-index:20;
+ box-shadow:0 2px 10px #0003
+}
+
+.logo{
+ display:flex;
+ align-items:center;
+ gap:10px
+}
+
+.hearts{font-size:28px}
+
+.logo small{
+ display:block;
+ opacity:.8;
+ margin-top:3px
+}
+
+.container{
+ max-width:1200px;
+ margin:auto;
+ padding:15px
+}
+
+.card{
+ background:#fff;
+ border-radius:16px;
+ padding:18px;
+ margin-bottom:15px;
+ box-shadow:0 2px 12px #00000012
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:14px
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:14px
+}
+
+.stat{
+ background:#fff;
+ padding:18px;
+ border-radius:15px;
+ box-shadow:0 2px 10px #0001
+}
+
+.stat b{
+ display:block;
+ font-size:28px;
+ margin-top:7px
+}
+
+.btn{
+ border:0;
+ border-radius:10px;
+ padding:10px 15px;
+ background:#1769aa;
+ color:#fff
+}
+
+.btn.secondary{
+ background:#e9eef5;
+ color:#17324d
+}
+
+.btn.success{background:#16804a}
+.btn.danger{background:#c93636}
+.btn.warning{background:#d28b00}
+
+.btn.small{
+ padding:7px 10px;
+ font-size:13px
+}
+
+input,select,textarea{
+ width:100%;
+ padding:11px;
+ border:1px solid #ccd5df;
+ border-radius:10px;
+ background:#fff;
+ outline:none
+}
+
+textarea{resize:vertical}
+
+input:focus,select:focus,textarea:focus{
+ border-color:#1769aa;
+ box-shadow:0 0 0 3px #1769aa18
+}
+
+label{
+ display:block;
+ font-weight:bold;
+ margin:9px 0 5px
+}
+
+.row{
+ display:flex;
+ gap:9px;
+ align-items:center;
+ flex-wrap:wrap
+}
+
+.between{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px
+}
+
+nav{
+ display:flex;
+ gap:7px;
+ overflow:auto;
+ margin-bottom:15px;
+ padding-bottom:3px
+}
+
+nav button{
+ white-space:nowrap;
+ border:0;
+ background:#fff;
+ padding:10px 14px;
+ border-radius:10px
+}
+
+nav button.active{
+ background:#1769aa;
+ color:#fff
+}
+
+.login{
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:linear-gradient(135deg,#eaf4ff,#fff)
+}
+
+.loginbox{
+ width:min(450px,100%);
+ background:#fff;
+ padding:25px;
+ border-radius:22px;
+ box-shadow:0 10px 35px #17324d22
+}
+
+.center{text-align:center}
+
+.service{
+ border:1px solid #e2e8f0;
+ padding:15px;
+ border-radius:14px;
+ cursor:pointer;
+ transition:.15s
+}
+
+.service:hover{
+ transform:translateY(-2px);
+ box-shadow:0 5px 14px #0001
+}
+
+.service .icon{font-size:30px}
+
+.service h3{margin:8px 0}
+
+.badge{
+ display:inline-block;
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:12px;
+ font-weight:bold
+}
+
+.badge.new{
+ background:#e8f1ff;
+ color:#1769aa
+}
+
+.badge.review{
+ background:#fff3d6;
+ color:#9b6900
+}
+
+.badge.missing{
+ background:#ffe8c9;
+ color:#a75b00
+}
+
+.badge.ok{
+ background:#dff7e9;
+ color:#08733e
+}
+
+.badge.no{
+ background:#ffe0e0;
+ color:#ad2222
+}
+
+.badge.done{
+ background:#e8e8e8;
+ color:#555
+}
+
+.notice{
+ padding:12px;
+ border-radius:12px;
+ background:#f5f8fc;
+ margin:8px 0
+}
+
+.alert{
+ background:#fff0f0;
+ color:#a32323;
+ padding:12px;
+ border-radius:12px
+}
+
+.empty{
+ padding:30px;
+ text-align:center;
+ color:#718096
+}
+
+.tablewrap{
+ overflow:auto
+}
+
+table{
+ width:100%;
+ border-collapse:collapse
+}
+
+th,td{
+ padding:10px;
+ border-bottom:1px solid #edf0f3;
+ text-align:right
+}
+
+th{background:#f7f9fb}
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:#0008;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:15px;
+ z-index:50
+}
+
+.modalbox{
+ background:#fff;
+ width:min(700px,100%);
+ max-height:92vh;
+ overflow:auto;
+ border-radius:18px;
+ padding:20px
+}
+
+.toast{
+ position:fixed;
+ bottom:18px;
+ left:18px;
+ z-index:100;
+ background:#172033;
+ color:#fff;
+ padding:13px 17px;
+ border-radius:12px;
+ box-shadow:0 5px 20px #0004
+}
+
+.chat{
+ height:320px;
+ overflow:auto;
+ background:#f7f9fb;
+ padding:10px;
+ border-radius:12px
+}
+
+.msg{
+ padding:10px 13px;
+ border-radius:13px;
+ margin:8px 0;
+ max-width:88%
+}
+
+.msg.worker{
+ background:#e9f3ff;
+ margin-right:auto
+}
+
+.msg.admin{
+ background:#e8f8ee;
+ margin-left:auto
+}
+
+.msg.ai{
+ background:#f2efff;
+ margin-left:auto
+}
+
+.msg small,
+.notice small{
+ display:block;
+ color:#718096;
+ margin-top:5px
+}
+
+.kpi{
+ font-size:13px;
+ color:#64748b
+}
+
+footer{
+ text-align:center;
+ padding:25px;
+ color:#718096
+}
+
+@media(max-width:800px){
+ .grid{grid-template-columns:1fr 1fr}
+ .grid2{grid-template-columns:1fr}
+}
+
+@media(max-width:520px){
+ .grid{grid-template-columns:1fr}
+ header{padding:10px}
+ .container{padding:10px}
+ .card{padding:14px}
+ .logo small{font-size:10px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<div id="modal" class="modal hidden">
+ <div id="modalBox" class="modalbox"></div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   منصة لجنة الخدمات الاجتماعية
+   ملف واحد فقط
+   ========================================================= */
+
+const DB_KEY="CFPA_SOCIAL_SERVICES_ONE_FILE_V1";
+
+/* الخدمات */
+const SERVICES=[
+ {
+  id:"loan",
+  name:"سلفة مسترجعة",
+  icon:"💳",
+  desc:"طلب سلفة مسترجعة"
+ },
+ {
+  id:"exceptional",
+  name:"إعانة استثنائية",
+  icon:"🤝",
+  desc:"طلب إعانة استثنائية"
+ },
+ {
+  id:"xray",
+  name:"تعويض الأشعة",
+  icon:"🩻",
+  desc:"طلب تعويض مصاريف الأشعة"
+ },
+ {
+  id:"worker_day",
+  name:"عيد العمال",
+  icon:"👷",
+  desc:"الاستفادة الخاصة بعيد العمال"
+ },
+ {
+  id:"woman_day",
+  name:"عيد المرأة",
+  icon:"🌷",
+  desc:"الاستفادة الخاصة بعيد المرأة"
+ },
+ {
+  id:"school",
+  name:"الدخول المدرسي",
+  icon:"🎒",
+  desc:"إعانة الدخول المدرسي"
+ },
+ {
+  id:"education",
+  name:"التمدرس",
+  icon:"📚",
+  desc:"إعانة التمدرس"
+ },
+ {
+  id:"omra",
+  name:"العمرة",
+  icon:"🕋",
+  desc:"برنامج العمرة"
+ },
+ {
+  id:"complaint",
+  name:"شكوى",
+  icon:"📝",
+  desc:"إرسال شكوى"
+ },
+ {
+  id:"question",
+  name:"استفسار",
+  icon:"❓",
+  desc:"إرسال استفسار"
+ }
+];
+
+/* الوقت */
+function now(){
+ return new Date().toISOString();
+}
+
+/* إنشاء نسخة */
+function clone(obj){
+ return JSON.parse(JSON.stringify(obj));
+}
+
+/* قاعدة البيانات الأولية */
+const DEFAULT_DB={
+ settings:{
+  name:"منصة لجنة الخدمات الاجتماعية",
+  center:"مركز التكوين المهني والتمهين فضيلة سعدان - بسكرة",
+  phone:"",
+  email:"",
+  totalBudget:120000000,
+  spentBudget:45000000,
+  aiEnabled:true
+ },
+
+ users:[
+  {
+   id:"admin",
+   username:"admin",
+   password:"admin123",
+   name:"إدارة لجنة الخدمات الاجتماعية",
+   phone:"",
+   email:"",
+   role:"admin",
+   active:true,
+   createdAt:now()
+  },
+  {
+   id:"worker1",
+   username:"123456789",
+   password:"1234",
+   name:"مستفيد تجريبي",
+   phone:"",
+   email:"",
+   role:"worker",
+   active:true,
+   createdAt:now()
+  }
+ ],
+
+ applications:[],
+ documents:[],
+ messages:[],
+ notifications:[],
+ announcements:[],
+ logs:[],
+ securityAlerts:[],
+ aiMessages:[],
+ smsQueue:[],
+ emailQueue:[],
+
+ knowledge:[
+  {
+   id:"k1",
+   title:"المساعد الآلي",
+   content:"المساعد يشرح المعلومات الموجودة في المنصة ولا يتخذ قرار القبول أو الرفض بدلا من اللجنة.",
+   active:true
+  }
+ ],
+
+ session:null
+};
+
+/* تحميل قاعدة البيانات */
+function loadDB(){
+
+ try{
+
+  const saved=localStorage.getItem(DB_KEY);
+
+  if(saved){
+
+   const data=JSON.parse(saved);
+
+   for(const key in DEFAULT_DB){
+
+    if(data[key]===undefined){
+     data[key]=clone(DEFAULT_DB[key]);
+    }
+
+   }
+
+   return data;
+
+  }
+
+ }catch(e){
+
+  console.error(e);
+
+ }
+
+ return clone(DEFAULT_DB);
+}
+
+let db=loadDB();
+
+/* حفظ */
+function saveDB(){
+ localStorage.setItem(DB_KEY,JSON.stringify(db));
+}
+
+/* معرف */
+function id(prefix="id"){
+
+ return prefix+"_"+Date.now().toString(36)+"_"+Math.random()
+ .toString(36).substring(2,8);
+
+}
+
+/* المستخدم الحالي */
+function currentUser(){
+
+ return db.users.find(u=>u.id===db.session);
+
+}
+
+/* هل هو مدير */
+function admin(){
+
+ return currentUser()?.role==="admin";
+
+}
+
+/* هروب HTML */
+function esc(value){
+
+ return String(value??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+
+}
+
+/* التاريخ */
+function formatDate(value){
+
+ if(!value)return "";
+
+ return new Date(value).toLocaleString(
+  "ar-DZ",
+  {
+   dateStyle:"medium",
+   timeStyle:"short"
+  }
+ );
+
+}
+
+/* المال */
+function money(value){
+
+ return Number(value||0).toLocaleString("fr-DZ")+" دج";
+
+}
+
+/* رسالة صغيرة */
+function toast(message){
+
+ const box=document.getElementById("toast");
+
+ box.textContent=message;
+
+ box.classList.remove("hidden");
+
+ clearTimeout(window.toastTimer);
+
+ window.toastTimer=setTimeout(()=>{
+  box.classList.add("hidden");
+ },3000);
+
+}
+
+/* السجل */
+function addLog(action,targetType="",targetId=""){
+
+ db.logs.unshift({
+  id:id("log"),
+  userId:db.session||null,
+  action,
+  targetType,
+  targetId,
+  createdAt:now()
+ });
+
+ saveDB();
+
+}
+
+/* تنبيه */
+function addSecurityAlert(message,severity="تنبيه"){
+
+ db.securityAlerts.unshift({
+  id:id("alert"),
+  message,
+  severity,
+  createdAt:now(),
+  resolved:false
+ });
+
+ saveDB();
+
+}
+
+/* إشعار */
+function notify(workerId,title,body){
+
+ db.notifications.unshift({
+  id:id("notification"),
+  workerId,
+  title,
+  body,
+  read:false,
+  createdAt:now()
+ });
+
+ saveDB();
+
+}
+
+/* تجهيز SMS */
+function queueSMS(worker,body){
+
+ db.smsQueue.unshift({
+  id:id("sms"),
+  workerId:worker.id,
+  phone:worker.phone||"",
+  body,
+  status:"جاهز — يحتاج ربط مزود SMS حقيقي",
+  createdAt:now()
+ });
+
+}
+
+/* تجهيز البريد */
+function queueEmail(worker,subject,body){
+
+ db.emailQueue.unshift({
+  id:id("email"),
+  workerId:worker.id,
+  email:worker.email||"",
+  subject,
+  body,
+  status:"جاهز — يحتاج ربط خدمة بريد حقيقية",
+  createdAt:now()
+ });
+
+}
+
+/* حالات الطلب */
+function statusBadge(status){
+
+ const map={
+
+  new:["جديد","new"],
+
+  review:["قيد الدراسة","review"],
+
+  missing:["وثائق ناقصة","missing"],
+
+  approved:["مقبول","ok"],
+
+  rejected:["مرفوض","no"],
+
+  completed:["مكتمل","done"]
+
+ };
+
+ const x=map[status]||[status,"done"];
+
+ return `<span class="badge ${x[1]}">${x[0]}</span>`;
+
+}
+
+/* =========================================================
+   شاشة الدخول
+   ========================================================= */
+
+function loginPage(){
+
+ document.getElementById("root").innerHTML=`
+
+ <div class="login">
+
+  <div class="loginbox">
+
+   <div class="center">
+
+    <div style="font-size:55px">
+     💙💚💛💗
+    </div>
+
+    <h2>${esc(db.settings.name)}</h2>
+
+    <p>${esc(db.settings.center)}</p>
+
+   </div>
+
+   <form onsubmit="login(event)">
+
+    <label>
+     اسم المستخدم / رقم العامل
+    </label>
+
+    <input
+     id="loginUsername"
+     required
+     autocomplete="username"
+    >
+
+    <label>
+     كلمة المرور
+    </label>
+
+    <input
+     id="loginPassword"
+     type="password"
+     required
+     autocomplete="current-password"
+    >
+
+    <button
+     class="btn"
+     style="width:100%;margin-top:15px"
+    >
+     تسجيل الدخول
+    </button>
+
+   </form>
+
+   <div class="notice" style="margin-top:15px">
+
+    <b>للتجربة:</b><br>
+
+    العامل:
+    <b>123456789</b>
+    /
+    <b>1234</b>
+
+    <br><br>
+
+    الإدارة:
+    <b>admin</b>
+    /
+    <b>admin123</b>
+
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+
+}
+
+/* الدخول */
+function login(event){
+
+ event.preventDefault();
+
+ const username=
+  document.getElementById("loginUsername").value.trim();
+
+ const password=
+  document.getElementById("loginPassword").value;
+
+ const u=db.users.find(
+  x=>
+   x.username===username &&
+   x.password===password
+ );
+
+ if(!u){
+
+  addSecurityAlert(
+   "محاولة دخول فاشلة للحساب: "+username,
+   "تحذير"
+  );
+
+  toast("اسم المستخدم أو كلمة المرور غير صحيحة");
+
+  return;
+
+ }
+
+ if(!u.active){
+
+  toast("هذا الحساب موقوف");
+
+  return;
+
+ }
+
+ db.session=u.id;
+
+ saveDB();
+
+ addLog("تسجيل الدخول");
+
+ render();
+
+}
+
+/* خروج */
+function logout(){
+
+ addLog("تسجيل الخروج");
+
+ db.session=null;
+
+ saveDB();
+
+ render();
+
+}
+
+/* =========================================================
+   الهيكل العام
+   ========================================================= */
+
+function shell(content,title=""){
+
+ const u=currentUser();
+
+ document.getElementById("root").innerHTML=`
+
+ <div>
+
+  <header>
+
+   <div class="logo">
+
+    <div class="hearts">
+     💙💚💛💗
+    </div>
+
+    <div>
+     <b>${esc(db.settings.name)}</b>
+
+     <small>
+      ${esc(db.settings.center)}
+     </small>
+    </div>
+
+   </div>
+
+   <div class="row">
+
+    <span>
+     ${esc(u?.name||"")}
+    </span>
+
+    <button
+     class="btn secondary small"
+     onclick="logout()"
+    >
+     خروج
+    </button>
+
+   </div>
+
+  </header>
+
+  <main class="container">
+
+   ${
+    title
+    ?
+    `
+    <div class="between">
+
+     <h2>${title}</h2>
+
+     <span class="kpi">
+      ${formatDate(now())}
+     </span>
+
+    </div>
+    `
+    :""
+   }
+
+   ${content}
+
+  </main>
+
+  <footer>
+   ${esc(db.settings.name)}
+   ©
+   ${new Date().getFullYear()}
+  </footer>
+
+ </div>
+
+ `;
+
+}
+
+/* =========================================================
+   قائمة العامل
+   ========================================================= */
+
+function workerNav(active){
+
+ return `
+
+ <nav>
+
+  <button
+   class="${active==="home"?"active":""}"
+   onclick="workerHome()"
+  >
+   🏠 الرئيسية
+  </button>
+
+  <button
+   class="${active==="services"?"active":""}"
+   onclick="workerServices()"
+  >
+   🧾 الخدمات
+  </button>
+
+  <button
+   class="${active==="requests"?"active":""}"
+   onclick="workerRequests()"
+  >
+   📂 طلباتي
+  </button>
+
+  <button
+   class="${active==="messages"?"active":""}"
+   onclick="workerMessages()"
+  >
+   💬 الرسائل
+  </button>
+
+  <button
+   class="${active==="ai"?"active":""}"
+   onclick="aiPage()"
+  >
+   🤖 المساعد
+  </button>
+
+  <button
+   class="${active==="notifications"?"active":""}"
+   onclick="workerNotifications()"
+  >
+   🔔 الإشعارات
+  </button>
+
+  <button
+   class="${active==="profile"?"active":""}"
+   onclick="workerProfile()"
+  >
+   👤 حسابي
+  </button>
+
+ </nav>
+
+ `;
+
+}
+
+/* =========================================================
+   الرئيسية للع
